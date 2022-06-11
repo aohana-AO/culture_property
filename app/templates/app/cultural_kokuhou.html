@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <!-- plugin -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+     <link rel="stylesheet"  href="{% static 'css/L.Control.Locate.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+ <!-- plugin -->
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8b17e034c8ab4546b8083bf009dee322 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 91%;
+                    left: 0.0%;
+                    top: -20px;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+       <header>
+<nav class="navbar navbar-inverse " style="padding: 3px;">
+        <div class="container-fluid">
+<!-- ヘッダー部分 ================ -->
+<div class="navbar-header">
+<a class="navbar-brand" href="{% url 'index' %}" style="color: #ffffff;font-size: 140%;">松山市文化財データapp</a>
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav_target">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+</div>
+            <!-- 中央のナビゲーション部分 ================ -->
+<div class="collapse navbar-collapse" id="nav_target">
+<ul class="nav navbar-nav"style="font-size: 16px">
+<!-- リンクのみ -->
+    <li><a href="{% url 'lists' %}">文化財データ一覧</a></li>
+<li><a href="{% url 'NewsView' %}">文化財ニュース</a></li>
+<!-- Nav2 ドロップダウン -->
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">文化財マップ一覧<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="{% url 'index' %}">松山市文化財マップ(全て)</a></li>
+<li><a href="{% url 'KokuhouView' %}">松山市文化財(国宝)</a></li>
+<li><a href="{% url 'TatemonoView' %}">松山市文化財(建造物)</a></li>
+<li><a href="{% url 'NotatemonoView' %}">松山市文化財(その他)</a></li>
+</ul>
+</li>
+
+<!-- Nav3 ドロップダウン -->
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">サイト情報 <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="#">当サイトについて</a></li>
+<li><a href="https://forms.gle/EYqmTEpEmUCQZF5q6">問い合わせ</a></li>
+</ul>
+</li>
+</ul>
+<!-- 右寄せになる部分 ================ -->
+<ul class="nav navbar-nav navbar-right">
+<!-- リンクのみ -->
+
+<li class="dropdown">
+
+</li>
+
+</ul>
+</div>
+</div>
+</nav>
+</header>
+            <div class="folium-map" id="map_8b17e034c8ab4546b8083bf009dee322" ></div>
+        
+</body>
+<script>
+
+            
+
+        //開いた瞬間発動するマップ
+var base = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+
+var map_8b17e034c8ab4546b8083bf009dee322 = L.map(
+    "map_8b17e034c8ab4546b8083bf009dee322",
+    {
+        center: [33.8314789, 132.7649427],
+        crs: L.CRS.EPSG3857,
+        zoom: 10,
+        zoomControl: true,
+        preferCanvas: false,
+        //zoom倍率
+        minZoom: 10,
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        //タイル
+        layers:[base]
+
+    }
+);
+ // Locate
+        var option = {
+        position: 'topright',
+        strings: {
+            title: "現在地を表示",
+            popup: "現在地",
+        },
+        icon: "fa fa-street-view",
+        locateOptions: {
+            maxZoom: 16
+        }
+        }
+
+        var lc = L.control.locate(option).addTo(map_8b17e034c8ab4546b8083bf009dee322);
+        lc.start();
+ //ここからマップいじり
+
+        var Basic_Map = new Array();
+            Basic_Map[ 0 ] = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            Basic_Map[ 1 ] = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+                attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+            });
+            Basic_Map[ 2 ] = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+                attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+            });
+            Basic_Map[ 3 ] = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles © <a href="http://www.esrij.com/"> Esri Japan </a>'
+            });
+            Basic_Map[ 4 ]=L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+                attribution: "<a href='https://developers.google.com/maps/documentation' target='_blank'>Google Map</a>"
+            });
+
+            var baseMap = {
+                "OpenStreetMap": Basic_Map[ 0 ],
+                "国土地理院 標準地図": Basic_Map[ 1 ],
+                "国土地理院 写真": Basic_Map[ 2 ],
+                "Esri World Topo Map": Basic_Map[ 3 ],
+                "google Map": Basic_Map[ 4 ],
+
+            };
+
+            var tile_layer_e30869c0c03748739f4138485c0784d4 = L.control.layers(baseMap).addTo(map_8b17e034c8ab4546b8083bf009dee322);
+        //ここまで
+    
+            var marker_cluster_0fe247b6153b4b25849d421190ec5585 = L.markerClusterGroup(
+                {}
+            );
+            map_8b17e034c8ab4546b8083bf009dee322.addLayer(marker_cluster_0fe247b6153b4b25849d421190ec5585);
+        
+    
+            var marker_34aeafd0252a4a17957a3d00294166fb = L.marker(
+                [33.84750047, 132.7965469],
+                {}
+            ).addTo(marker_cluster_0fe247b6153b4b25849d421190ec5585);
+        
+    
+            var icon_419fa7bf5c6043ccac23bdacaf5e4208 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_34aeafd0252a4a17957a3d00294166fb.setIcon(icon_419fa7bf5c6043ccac23bdacaf5e4208);
+        
+    
+        var popup_a2262765d9f14c21b569dec60a2092a4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_71bb934d89914817a2580f0c9c142cfb = $(`<div id="html_71bb934d89914817a2580f0c9c142cfb" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺二王門"><font size="4" color="#0000FF">石手寺二王門</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_nioumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_nioumon.html</a></p></div> </div>`)[0];
+            popup_a2262765d9f14c21b569dec60a2092a4.setContent(html_71bb934d89914817a2580f0c9c142cfb);
+        
+
+        marker_34aeafd0252a4a17957a3d00294166fb.bindPopup(popup_a2262765d9f14c21b569dec60a2092a4)
+        ;
+
+        
+    
+    
+            var marker_e83b7565393648a69cefc427f753260b = L.marker(
+                [33.84174141, 132.7422099],
+                {}
+            ).addTo(marker_cluster_0fe247b6153b4b25849d421190ec5585);
+        
+    
+            var icon_f43819f2144246fc84ae90ad17d6e46c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_e83b7565393648a69cefc427f753260b.setIcon(icon_f43819f2144246fc84ae90ad17d6e46c);
+        
+    
+        var popup_e76f825f77024cd78c06f947a23ab72a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0db30af1d548401b8a511d3ea3480271 = $(`<div id="html_0db30af1d548401b8a511d3ea3480271" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=大宝寺本堂　附　厨子１基　棟札１枚"><font size="4" color="#0000FF">大宝寺本堂　附　厨子１基　棟札１枚</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市南江戸5">愛媛県松山市南江戸5</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taihouji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taihouji_hondou.html</a></p></div> </div>`)[0];
+            popup_e76f825f77024cd78c06f947a23ab72a.setContent(html_0db30af1d548401b8a511d3ea3480271);
+        
+
+        marker_e83b7565393648a69cefc427f753260b.bindPopup(popup_e76f825f77024cd78c06f947a23ab72a)
+        ;
+
+        
+    
+    
+            var marker_7400abc94f4f4d5bb5e2c4b518e2df8c = L.marker(
+                [33.88504027, 132.7149663],
+                {}
+            ).addTo(marker_cluster_0fe247b6153b4b25849d421190ec5585);
+        
+    
+            var icon_bfcdff43a9b5422eb1fc00e68bde9cf5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_7400abc94f4f4d5bb5e2c4b518e2df8c.setIcon(icon_bfcdff43a9b5422eb1fc00e68bde9cf5);
+        
+    
+        var popup_652ea578fd7e47cc98cec7a517438ba9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a0169ecce7484a55b64fb998e4cb485f = $(`<div id="html_a0169ecce7484a55b64fb998e4cb485f" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=太山寺本堂"><font size="4" color="#0000FF">太山寺本堂</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市太山寺町">愛媛県松山市太山寺町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisannji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisannji_hondou.html</a></p></div> </div>`)[0];
+            popup_652ea578fd7e47cc98cec7a517438ba9.setContent(html_a0169ecce7484a55b64fb998e4cb485f);
+        
+
+        marker_7400abc94f4f4d5bb5e2c4b518e2df8c.bindPopup(popup_652ea578fd7e47cc98cec7a517438ba9)
+        ;
+
+        
+    
+</script>

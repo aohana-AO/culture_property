@@ -1,0 +1,2006 @@
+{% load static %}
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <!-- plugin -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+     <link rel="stylesheet"  href="{% static 'css/L.Control.Locate.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+ <!-- plugin -->
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b859c5719a1340f19c40d2b51e0e85c0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 91.0%;
+                    left: 0.0%;
+                    top: -20px;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+       <header>
+<nav class="navbar navbar-inverse " style="padding: 3px">
+        <div class="container-fluid">
+<!-- ヘッダー部分 ================ -->
+<div class="navbar-header">
+<a class="navbar-brand" href="{% url 'index' %}" style="color: #ffffff;font-size: 140%;">松山市文化財データapp</a>
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav_target">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+</div>
+            <!-- 中央のナビゲーション部分 ================ -->
+<div class="collapse navbar-collapse" id="nav_target">
+<ul class="nav navbar-nav"style="font-size: 16px">
+<!-- リンクのみ -->
+    <li><a href="{% url 'lists' %}">文化財データ一覧</a></li>
+<li><a href="{% url 'NewsView' %}">文化財ニュース</a></li>
+<!-- Nav2 ドロップダウン -->
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">文化財マップ一覧<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="{% url 'index' %}">松山市文化財マップ(全て)</a></li>
+<li><a href="{% url 'KokuhouView' %}">松山市文化財(国宝)</a></li>
+<li><a href="{% url 'TatemonoView' %}">松山市文化財(建造物)</a></li>
+<li><a href="{% url 'NotatemonoView' %}">松山市文化財(その他)</a></li>
+</ul>
+</li>
+
+<!-- Nav3 ドロップダウン -->
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">サイト情報 <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="#">当サイトについて</a></li>
+<li><a href="https://forms.gle/EYqmTEpEmUCQZF5q6">問い合わせ</a></li>
+</ul>
+</li>
+</ul>
+<!-- 右寄せになる部分 ================ -->
+<ul class="nav navbar-nav navbar-right">
+<!-- リンクのみ -->
+
+<li class="dropdown">
+
+</li>
+
+</ul>
+</div>
+</div>
+</nav>
+</header>
+            <div class="folium-map" id="map_b859c5719a1340f19c40d2b51e0e85c0" ></div>
+        
+</body>
+<script>    
+
+
+
+        //開いた瞬間発動するマップ
+var base = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+
+var map_b859c5719a1340f19c40d2b51e0e85c0 = L.map(
+    "map_b859c5719a1340f19c40d2b51e0e85c0",
+    {
+        center: [33.8314789, 132.7649427],
+        crs: L.CRS.EPSG3857,
+        zoom: 10,
+        zoomControl: true,
+        preferCanvas: false,
+        //zoom倍率
+        minZoom: 10,
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        //タイル
+        layers:[base]
+
+    }
+);
+ // Locate
+        var option = {
+        position: 'topright',
+        strings: {
+            title: "現在地を表示",
+            popup: "現在地",
+        },
+        icon: "fa fa-street-view",
+        locateOptions: {
+            maxZoom: 16
+        }
+        }
+
+        var lc = L.control.locate(option).addTo(map_b859c5719a1340f19c40d2b51e0e85c0);
+        lc.start();
+ //ここからマップいじり
+
+        var Basic_Map = new Array();
+            Basic_Map[ 0 ] = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            Basic_Map[ 1 ] = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+                attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+            });
+            Basic_Map[ 2 ] = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+                attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+            });
+            Basic_Map[ 3 ] = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles © <a href="http://www.esrij.com/"> Esri Japan </a>'
+            });
+            Basic_Map[ 4 ]=L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+                attribution: "<a href='https://developers.google.com/maps/documentation' target='_blank'>Google Map</a>"
+            });
+
+            var baseMap = {
+                "OpenStreetMap": Basic_Map[ 0 ],
+                "国土地理院 標準地図": Basic_Map[ 1 ],
+                "国土地理院 写真": Basic_Map[ 2 ],
+                "Esri World Topo Map": Basic_Map[ 3 ],
+                "google Map": Basic_Map[ 4 ],
+
+            };
+
+            var tile_layer_e30869c0c03748739f4138485c0784d4 = L.control.layers(baseMap).addTo(map_b859c5719a1340f19c40d2b51e0e85c0);
+        //ここまで
+            
+
+
+    
+            var marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c = L.markerClusterGroup(
+                {}
+            );
+            map_b859c5719a1340f19c40d2b51e0e85c0.addLayer(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var marker_5ef48171327c40e790ad1625fb7cfa97 = L.marker(
+                [33.84750047, 132.7965469],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e59b332c31d44e30abbcc2ae738da28b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_5ef48171327c40e790ad1625fb7cfa97.setIcon(icon_e59b332c31d44e30abbcc2ae738da28b);
+        
+    
+        var popup_31f403f4b6ae4c12b31d80eb6f1b70be = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a314cc29a9b7417d8a242a9cdef49e9d = $(`<div id="html_a314cc29a9b7417d8a242a9cdef49e9d" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺二王門"><font size="4" color="#0000FF">石手寺二王門</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_nioumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_nioumon.html</a></p></div> </div>`)[0];
+            popup_31f403f4b6ae4c12b31d80eb6f1b70be.setContent(html_a314cc29a9b7417d8a242a9cdef49e9d);
+        
+
+        marker_5ef48171327c40e790ad1625fb7cfa97.bindPopup(popup_31f403f4b6ae4c12b31d80eb6f1b70be)
+        ;
+
+        
+    
+    
+            var marker_6c7b2f73b5d94654a4f3571b10dfd888 = L.marker(
+                [33.84174141, 132.7422099],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_0d73d2f821314b55836c666356ffa377 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_6c7b2f73b5d94654a4f3571b10dfd888.setIcon(icon_0d73d2f821314b55836c666356ffa377);
+        
+    
+        var popup_333ce08c8197491e8e940316367083a1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_056e9501578f42ac80327b523349d411 = $(`<div id="html_056e9501578f42ac80327b523349d411" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=大宝寺本堂　附　厨子１基　棟札１枚"><font size="4" color="#0000FF">大宝寺本堂　附　厨子１基　棟札１枚</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市南江戸5">愛媛県松山市南江戸5</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taihouji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taihouji_hondou.html</a></p></div> </div>`)[0];
+            popup_333ce08c8197491e8e940316367083a1.setContent(html_056e9501578f42ac80327b523349d411);
+        
+
+        marker_6c7b2f73b5d94654a4f3571b10dfd888.bindPopup(popup_333ce08c8197491e8e940316367083a1)
+        ;
+
+        
+    
+    
+            var marker_2f289c9465bf40ddb7682413b7a26f9f = L.marker(
+                [33.88504027, 132.7149663],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e2a4e0bd25d7415cbb858c6a13824e92 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_2f289c9465bf40ddb7682413b7a26f9f.setIcon(icon_e2a4e0bd25d7415cbb858c6a13824e92);
+        
+    
+        var popup_64b6abcf5e634b569e72ba2e2e01d0cb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cba5ef40f30f47199d8ff020bbcd5577 = $(`<div id="html_cba5ef40f30f47199d8ff020bbcd5577" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=太山寺本堂"><font size="4" color="#0000FF">太山寺本堂</font></a></h3></strong><hr><p>文化財分類: 国宝</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市太山寺町">愛媛県松山市太山寺町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisannji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisannji_hondou.html</a></p></div> </div>`)[0];
+            popup_64b6abcf5e634b569e72ba2e2e01d0cb.setContent(html_cba5ef40f30f47199d8ff020bbcd5577);
+        
+
+        marker_2f289c9465bf40ddb7682413b7a26f9f.bindPopup(popup_64b6abcf5e634b569e72ba2e2e01d0cb)
+        ;
+
+        
+    
+    
+            var marker_6e1d4d5ecd084d5180236d2baeffcb49 = L.marker(
+                [33.8839958, 132.7200092],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_4e1918e4748e406d9cdc4bd2c94be75b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_6e1d4d5ecd084d5180236d2baeffcb49.setIcon(icon_4e1918e4748e406d9cdc4bd2c94be75b);
+        
+    
+        var popup_85b8e42ae52b48dd9099d5088c9e84b2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_61530d00e15f4cae9b3845763a5fcb0c = $(`<div id="html_61530d00e15f4cae9b3845763a5fcb0c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=太山寺二王門"><font size="4" color="#0000FF">太山寺二王門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市太山寺町">愛媛県松山市太山寺町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisanji_nioumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/taisanji_nioumon.html</a></p></div> </div>`)[0];
+            popup_85b8e42ae52b48dd9099d5088c9e84b2.setContent(html_61530d00e15f4cae9b3845763a5fcb0c);
+        
+
+        marker_6e1d4d5ecd084d5180236d2baeffcb49.bindPopup(popup_85b8e42ae52b48dd9099d5088c9e84b2)
+        ;
+
+        
+    
+    
+            var marker_0f47d71e5e49482b8ac5571be985404c = L.marker(
+                [33.84787242, 132.7964859],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_311b532ff5544d5696de787d21d37346 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_0f47d71e5e49482b8ac5571be985404c.setIcon(icon_311b532ff5544d5696de787d21d37346);
+        
+    
+        var popup_3008eba1cdab4648aa37a01946c4c8a2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cd4e1d25985d4c76b96fbb91bc71341e = $(`<div id="html_cd4e1d25985d4c76b96fbb91bc71341e" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺本堂　附 銘札１枚、棟札３枚"><font size="4" color="#0000FF">石手寺本堂　附 銘札１枚、棟札３枚</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_hondou.html</a></p></div> </div>`)[0];
+            popup_3008eba1cdab4648aa37a01946c4c8a2.setContent(html_cd4e1d25985d4c76b96fbb91bc71341e);
+        
+
+        marker_0f47d71e5e49482b8ac5571be985404c.bindPopup(popup_3008eba1cdab4648aa37a01946c4c8a2)
+        ;
+
+        
+    
+    
+            var marker_2a1b09f9544841f19b20f34427812c1d = L.marker(
+                [33.84772345, 132.7967028],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d6bbb2b510214ded971f3fbc8b7a8d62 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_2a1b09f9544841f19b20f34427812c1d.setIcon(icon_d6bbb2b510214ded971f3fbc8b7a8d62);
+        
+    
+        var popup_51adeb1f654747718487bdf2eb45555d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_21c70397d7274025a9e2d17bc7bfcc36 = $(`<div id="html_21c70397d7274025a9e2d17bc7bfcc36" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺三重塔　附 棟札１枚"><font size="4" color="#0000FF">石手寺三重塔　附 棟札１枚</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_sannjuunotou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_sannjuunotou.html</a></p></div> </div>`)[0];
+            popup_51adeb1f654747718487bdf2eb45555d.setContent(html_21c70397d7274025a9e2d17bc7bfcc36);
+        
+
+        marker_2a1b09f9544841f19b20f34427812c1d.bindPopup(popup_51adeb1f654747718487bdf2eb45555d)
+        ;
+
+        
+    
+    
+            var marker_02aa1d41b9824ca19fc3e1c6ce45e6ab = L.marker(
+                [33.84763646, 132.7968318],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_720932430af5415eb13736328bd63ea7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_02aa1d41b9824ca19fc3e1c6ce45e6ab.setIcon(icon_720932430af5415eb13736328bd63ea7);
+        
+    
+        var popup_2c03b2a1ecb04a6196a7ff69029db729 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_98416c68759c421e933cdcaecedcd510 = $(`<div id="html_98416c68759c421e933cdcaecedcd510" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺鐘楼"><font size="4" color="#0000FF">石手寺鐘楼</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_shourou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_shourou.html</a></p></div> </div>`)[0];
+            popup_2c03b2a1ecb04a6196a7ff69029db729.setContent(html_98416c68759c421e933cdcaecedcd510);
+        
+
+        marker_02aa1d41b9824ca19fc3e1c6ce45e6ab.bindPopup(popup_2c03b2a1ecb04a6196a7ff69029db729)
+        ;
+
+        
+    
+    
+            var marker_f226eecfd2564fb78185a5bd5eb0463f = L.marker(
+                [33.84919523, 132.7965139],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_326df170372947118b97f32ff9419af2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f226eecfd2564fb78185a5bd5eb0463f.setIcon(icon_326df170372947118b97f32ff9419af2);
+        
+    
+        var popup_8766ff47115942fd9c58937287b3355a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_85bd849c876f4c58868d571283f86681 = $(`<div id="html_85bd849c876f4c58868d571283f86681" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺五輪塔"><font size="4" color="#0000FF">石手寺五輪塔</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_gorintou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_gorintou.html</a></p></div> </div>`)[0];
+            popup_8766ff47115942fd9c58937287b3355a.setContent(html_85bd849c876f4c58868d571283f86681);
+        
+
+        marker_f226eecfd2564fb78185a5bd5eb0463f.bindPopup(popup_8766ff47115942fd9c58937287b3355a)
+        ;
+
+        
+    
+    
+            var marker_329085fe3b1f41b7a3f2932ea671cce1 = L.marker(
+                [33.84800441, 132.7968788],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_a888077a1f7747b3aea478aaa411ae2e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_329085fe3b1f41b7a3f2932ea671cce1.setIcon(icon_a888077a1f7747b3aea478aaa411ae2e);
+        
+    
+        var popup_c376595dad7e4077829fba2e362d5337 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f940504f87394e82b5a50bb176ecd6d4 = $(`<div id="html_f940504f87394e82b5a50bb176ecd6d4" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺訶梨帝母天堂"><font size="4" color="#0000FF">石手寺訶梨帝母天堂</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_kariteimo.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_kariteimo.html</a></p></div> </div>`)[0];
+            popup_c376595dad7e4077829fba2e362d5337.setContent(html_f940504f87394e82b5a50bb176ecd6d4);
+        
+
+        marker_329085fe3b1f41b7a3f2932ea671cce1.bindPopup(popup_c376595dad7e4077829fba2e362d5337)
+        ;
+
+        
+    
+    
+            var marker_1077474e81034ce1b8b233eb2fd40c0b = L.marker(
+                [33.84784743, 132.7968848],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_87411abf475e4dcabb613881cfec4bc8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_1077474e81034ce1b8b233eb2fd40c0b.setIcon(icon_87411abf475e4dcabb613881cfec4bc8);
+        
+    
+        var popup_270d13ac530c4eea91e8bc908f16eef0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f0858ef292b14450b001a5df0f190d3d = $(`<div id="html_f0858ef292b14450b001a5df0f190d3d" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石手寺護摩堂　附　棟札２枚"><font size="4" color="#0000FF">石手寺護摩堂　附　棟札２枚</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市石手2">愛媛県松山市石手2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_gomadou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isiteji_gomadou.html</a></p></div> </div>`)[0];
+            popup_270d13ac530c4eea91e8bc908f16eef0.setContent(html_f0858ef292b14450b001a5df0f190d3d);
+        
+
+        marker_1077474e81034ce1b8b233eb2fd40c0b.bindPopup(popup_270d13ac530c4eea91e8bc908f16eef0)
+        ;
+
+        
+    
+    
+            var marker_c763986626f14e718f135716c7678fb3 = L.marker(
+                [33.84553972, 132.7656948],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_520cf1c64ae24a5299cd46f471264858 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_c763986626f14e718f135716c7678fb3.setIcon(icon_520cf1c64ae24a5299cd46f471264858);
+        
+    
+        var popup_e153185e95394837860c225eed93f393 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_92e164ccde86485394b9430f7170262c = $(`<div id="html_92e164ccde86485394b9430f7170262c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城天守"><font size="4" color="#0000FF">松山城天守</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_tenshu.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_tenshu.html</a></p></div> </div>`)[0];
+            popup_e153185e95394837860c225eed93f393.setContent(html_92e164ccde86485394b9430f7170262c);
+        
+
+        marker_c763986626f14e718f135716c7678fb3.bindPopup(popup_e153185e95394837860c225eed93f393)
+        ;
+
+        
+    
+    
+            var marker_de97051d5522495db5dc6152d6bd1b77 = L.marker(
+                [33.84542374, 132.7658537],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e8e7704a16354aa1b46fea9beac60557 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_de97051d5522495db5dc6152d6bd1b77.setIcon(icon_e8e7704a16354aa1b46fea9beac60557);
+        
+    
+        var popup_8a70d102465e45be9aa1ed3f1fcbb504 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_074b0ee4d7054d80989e7984522146c9 = $(`<div id="html_074b0ee4d7054d80989e7984522146c9" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城三の門南櫓"><font size="4" color="#0000FF">松山城三の門南櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/3nomon_minamiyagura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/3nomon_minamiyagura.html</a></p></div> </div>`)[0];
+            popup_8a70d102465e45be9aa1ed3f1fcbb504.setContent(html_074b0ee4d7054d80989e7984522146c9);
+        
+
+        marker_de97051d5522495db5dc6152d6bd1b77.bindPopup(popup_8a70d102465e45be9aa1ed3f1fcbb504)
+        ;
+
+        
+    
+    
+            var marker_24f81b208b7b4ae881b72d05805bb049 = L.marker(
+                [33.84533876, 132.7660057],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_6e54a6f671084e389852d1c6d6c67adc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_24f81b208b7b4ae881b72d05805bb049.setIcon(icon_6e54a6f671084e389852d1c6d6c67adc);
+        
+    
+        var popup_64ed2df37ffb41b0a0d35a207a8ceb55 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e85503b08dad474e8a8121c9702d1cda = $(`<div id="html_e85503b08dad474e8a8121c9702d1cda" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城二の門南櫓"><font size="4" color="#0000FF">松山城二の門南櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/2nomon_minamiyagura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/2nomon_minamiyagura.html</a></p></div> </div>`)[0];
+            popup_64ed2df37ffb41b0a0d35a207a8ceb55.setContent(html_e85503b08dad474e8a8121c9702d1cda);
+        
+
+        marker_24f81b208b7b4ae881b72d05805bb049.bindPopup(popup_64ed2df37ffb41b0a0d35a207a8ceb55)
+        ;
+
+        
+    
+    
+            var marker_301a2a5793bd4cf9a1a45ce7688adde2 = L.marker(
+                [33.84530876, 132.7657967],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_556f346446a34b9d8be00b058fad0b11 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_301a2a5793bd4cf9a1a45ce7688adde2.setIcon(icon_556f346446a34b9d8be00b058fad0b11);
+        
+    
+        var popup_415bd01c479944c6bdc2ca8aa19b313c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f1e2a10887e8447e93bedf66966ce741 = $(`<div id="html_f1e2a10887e8447e93bedf66966ce741" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城一の門南櫓"><font size="4" color="#0000FF">松山城一の門南櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/1nomon_minamiyagura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/1nomon_minamiyagura.html</a></p></div> </div>`)[0];
+            popup_415bd01c479944c6bdc2ca8aa19b313c.setContent(html_f1e2a10887e8447e93bedf66966ce741);
+        
+
+        marker_301a2a5793bd4cf9a1a45ce7688adde2.bindPopup(popup_415bd01c479944c6bdc2ca8aa19b313c)
+        ;
+
+        
+    
+    
+            var marker_1fa344d8c35243d5962d0a9e5b9ccb06 = L.marker(
+                [33.84529173, 132.7648378],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_b28620d255d640d1aa152155f79195c2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_1fa344d8c35243d5962d0a9e5b9ccb06.setIcon(icon_b28620d255d640d1aa152155f79195c2);
+        
+    
+        var popup_d69085c025724f7da5032d7fadd57d4c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_de70867b011c4da592f3cf501f24f0e1 = $(`<div id="html_de70867b011c4da592f3cf501f24f0e1" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城乾櫓"><font size="4" color="#0000FF">松山城乾櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/inuiyagura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/inuiyagura.html</a></p></div> </div>`)[0];
+            popup_d69085c025724f7da5032d7fadd57d4c.setContent(html_de70867b011c4da592f3cf501f24f0e1);
+        
+
+        marker_1fa344d8c35243d5962d0a9e5b9ccb06.bindPopup(popup_d69085c025724f7da5032d7fadd57d4c)
+        ;
+
+        
+    
+    
+            var marker_1f32024ee3434b2dba5240837eeabfe4 = L.marker(
+                [33.8455897, 132.7651038],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_6466121317244846ad1ba437ee2bd11e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_1f32024ee3434b2dba5240837eeabfe4.setIcon(icon_6466121317244846ad1ba437ee2bd11e);
+        
+    
+        var popup_a039a4aa17c24d4c8da874a444b08890 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4e70be03c342446a8db217bf58192ea0 = $(`<div id="html_4e70be03c342446a8db217bf58192ea0" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城野原櫓"><font size="4" color="#0000FF">松山城野原櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/noharayagura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/noharayagura.html</a></p></div> </div>`)[0];
+            popup_a039a4aa17c24d4c8da874a444b08890.setContent(html_4e70be03c342446a8db217bf58192ea0);
+        
+
+        marker_1f32024ee3434b2dba5240837eeabfe4.bindPopup(popup_a039a4aa17c24d4c8da874a444b08890)
+        ;
+
+        
+    
+    
+            var marker_b084f554485343758373456857bd9f8c = L.marker(
+                [33.84567371, 132.7656848],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_84f1b3f507d64d6887a3b12bbf1faec4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_b084f554485343758373456857bd9f8c.setIcon(icon_84f1b3f507d64d6887a3b12bbf1faec4);
+        
+    
+        var popup_2bc7636f9d024a7ea6f3457152607fb4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_720e8b735f5446ffaa461a2305612228 = $(`<div id="html_720e8b735f5446ffaa461a2305612228" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城仕切門"><font size="4" color="#0000FF">松山城仕切門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sikiromon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sikiromon.html</a></p></div> </div>`)[0];
+            popup_2bc7636f9d024a7ea6f3457152607fb4.setContent(html_720e8b735f5446ffaa461a2305612228);
+        
+
+        marker_b084f554485343758373456857bd9f8c.bindPopup(popup_2bc7636f9d024a7ea6f3457152607fb4)
+        ;
+
+        
+    
+    
+            var marker_588bb0ab8ed84d9ab0143619ea7e20d8 = L.marker(
+                [33.84547974, 132.7658677],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_b574c43d64f9441ab1226d75646a2808 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_588bb0ab8ed84d9ab0143619ea7e20d8.setIcon(icon_b574c43d64f9441ab1226d75646a2808);
+        
+    
+        var popup_7ab483c59fc343cb840b5605af097335 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_70e0c196350a48d491511bd8f50ebc10 = $(`<div id="html_70e0c196350a48d491511bd8f50ebc10" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城三の門"><font size="4" color="#0000FF">松山城三の門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_3nomon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_3nomon.html</a></p></div> </div>`)[0];
+            popup_7ab483c59fc343cb840b5605af097335.setContent(html_70e0c196350a48d491511bd8f50ebc10);
+        
+
+        marker_588bb0ab8ed84d9ab0143619ea7e20d8.bindPopup(popup_7ab483c59fc343cb840b5605af097335)
+        ;
+
+        
+    
+    
+            var marker_1afbe8a10a854458850fab5ed2ab8ade = L.marker(
+                [33.84543175, 132.7659557],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c09f1650c7994ecd93ba1a24ed43d06f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_1afbe8a10a854458850fab5ed2ab8ade.setIcon(icon_c09f1650c7994ecd93ba1a24ed43d06f);
+        
+    
+        var popup_7e4960b6e79a487687c9027b84eea290 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_28134eedf1b946c7bb5b0a5381c082a4 = $(`<div id="html_28134eedf1b946c7bb5b0a5381c082a4" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城二の門"><font size="4" color="#0000FF">松山城二の門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_2nomon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_2nomon.html</a></p></div> </div>`)[0];
+            popup_7e4960b6e79a487687c9027b84eea290.setContent(html_28134eedf1b946c7bb5b0a5381c082a4);
+        
+
+        marker_1afbe8a10a854458850fab5ed2ab8ade.bindPopup(popup_7e4960b6e79a487687c9027b84eea290)
+        ;
+
+        
+    
+    
+            var marker_31439170926d450484534d40816f0ce7 = L.marker(
+                [33.84535875, 132.7657997],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_263d9f02ba75425d9daaa362e70b1538 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_31439170926d450484534d40816f0ce7.setIcon(icon_263d9f02ba75425d9daaa362e70b1538);
+        
+    
+        var popup_3608f3a49c12474eb083b289f839f515 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ed74587101f94accb1eb76b39aca0b9f = $(`<div id="html_ed74587101f94accb1eb76b39aca0b9f" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城一の門"><font size="4" color="#0000FF">松山城一の門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_1nomon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/matsuyamajou_1nomon.html</a></p></div> </div>`)[0];
+            popup_3608f3a49c12474eb083b289f839f515.setContent(html_ed74587101f94accb1eb76b39aca0b9f);
+        
+
+        marker_31439170926d450484534d40816f0ce7.bindPopup(popup_3608f3a49c12474eb083b289f839f515)
+        ;
+
+        
+    
+    
+            var marker_47541a7343a9455caddac8e9ababdd45 = L.marker(
+                [33.84522277, 132.7657358],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_12c27869d23843d2b5763fd27d65dd40 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_47541a7343a9455caddac8e9ababdd45.setIcon(icon_12c27869d23843d2b5763fd27d65dd40);
+        
+    
+        var popup_2286cf89362f46608d657f78bb8788eb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_8ffca9a064c64946bc678fcedfd88c03 = $(`<div id="html_8ffca9a064c64946bc678fcedfd88c03" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城紫竹門"><font size="4" color="#0000FF">松山城紫竹門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sichikumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sichikumon.html</a></p></div> </div>`)[0];
+            popup_2286cf89362f46608d657f78bb8788eb.setContent(html_8ffca9a064c64946bc678fcedfd88c03);
+        
+
+        marker_47541a7343a9455caddac8e9ababdd45.bindPopup(popup_2286cf89362f46608d657f78bb8788eb)
+        ;
+
+        
+    
+    
+            var marker_eb8a3ecdd65440d288f5f01e5086576e = L.marker(
+                [33.843705, 132.7669306],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d65c6205ca924f9fbef5a505974eacf1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_eb8a3ecdd65440d288f5f01e5086576e.setIcon(icon_d65c6205ca924f9fbef5a505974eacf1);
+        
+    
+        var popup_6f41e29bfc664810a8694dc5152af00c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_36ebc8a11f4c4e10a3b80900f56137fa = $(`<div id="html_36ebc8a11f4c4e10a3b80900f56137fa" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城隠門"><font size="4" color="#0000FF">松山城隠門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/kakuremon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/kakuremon.html</a></p></div> </div>`)[0];
+            popup_6f41e29bfc664810a8694dc5152af00c.setContent(html_36ebc8a11f4c4e10a3b80900f56137fa);
+        
+
+        marker_eb8a3ecdd65440d288f5f01e5086576e.bindPopup(popup_6f41e29bfc664810a8694dc5152af00c)
+        ;
+
+        
+    
+    
+            var marker_560332ce586840db8bde3fa7e025755d = L.marker(
+                [33.84376299, 132.7669616],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_7d569e1dce9146c2a21e906b11e60266 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_560332ce586840db8bde3fa7e025755d.setIcon(icon_7d569e1dce9146c2a21e906b11e60266);
+        
+    
+        var popup_71c034ec785e438ca027fc144418368a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c891aaf83b594c68bd38919c5e1be238 = $(`<div id="html_c891aaf83b594c68bd38919c5e1be238" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城隠門続櫓"><font size="4" color="#0000FF">松山城隠門続櫓</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/kakuremon_tuduki.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/kakuremon_tuduki.html</a></p></div> </div>`)[0];
+            popup_71c034ec785e438ca027fc144418368a.setContent(html_c891aaf83b594c68bd38919c5e1be238);
+        
+
+        marker_560332ce586840db8bde3fa7e025755d.bindPopup(popup_71c034ec785e438ca027fc144418368a)
+        ;
+
+        
+    
+    
+            var marker_6bf62636df084d2896436c29b584de21 = L.marker(
+                [33.843592, 132.7666266],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_4f5d10cd81ce4693b80b6ab22ebbff4b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_6bf62636df084d2896436c29b584de21.setIcon(icon_4f5d10cd81ce4693b80b6ab22ebbff4b);
+        
+    
+        var popup_904a0b163f3c447582d8554f261e41fc = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ff7c52ca4a0b4d4995511f721030cdab = $(`<div id="html_ff7c52ca4a0b4d4995511f721030cdab" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城戸無門"><font size="4" color="#0000FF">松山城戸無門</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/tonasimon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/tonasimon.html</a></p></div> </div>`)[0];
+            popup_904a0b163f3c447582d8554f261e41fc.setContent(html_ff7c52ca4a0b4d4995511f721030cdab);
+        
+
+        marker_6bf62636df084d2896436c29b584de21.bindPopup(popup_904a0b163f3c447582d8554f261e41fc)
+        ;
+
+        
+    
+    
+            var marker_db7818be158a414591ef023e9c5a3080 = L.marker(
+                [33.8456877, 132.7656138],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_58ac9599f948468b88d1f76c421f0350 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_db7818be158a414591ef023e9c5a3080.setIcon(icon_58ac9599f948468b88d1f76c421f0350);
+        
+    
+        var popup_568ca479b9594e4b80d1f7f7abc3bd30 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0b79e1c65e314c0782bbcd73b2554003 = $(`<div id="html_0b79e1c65e314c0782bbcd73b2554003" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城仕切門内塀"><font size="4" color="#0000FF">松山城仕切門内塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sikirimon_uchibei.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sikirimon_uchibei.html</a></p></div> </div>`)[0];
+            popup_568ca479b9594e4b80d1f7f7abc3bd30.setContent(html_0b79e1c65e314c0782bbcd73b2554003);
+        
+
+        marker_db7818be158a414591ef023e9c5a3080.bindPopup(popup_568ca479b9594e4b80d1f7f7abc3bd30)
+        ;
+
+        
+    
+    
+            var marker_ef7d21100f8c4205a26f67756d50fc1f = L.marker(
+                [33.84545174, 132.7660157],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_3ab8e057d4054fb7bbed3121c38121b2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_ef7d21100f8c4205a26f67756d50fc1f.setIcon(icon_3ab8e057d4054fb7bbed3121c38121b2);
+        
+    
+        var popup_2d1d38ad825442d99674689b5f57067e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7340d5508f1d445eb89cb2a0e9cc2649 = $(`<div id="html_7340d5508f1d445eb89cb2a0e9cc2649" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城三の門東塀"><font size="4" color="#0000FF">松山城三の門東塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/3nomon_higasibei.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/3nomon_higasibei.html</a></p></div> </div>`)[0];
+            popup_2d1d38ad825442d99674689b5f57067e.setContent(html_7340d5508f1d445eb89cb2a0e9cc2649);
+        
+
+        marker_ef7d21100f8c4205a26f67756d50fc1f.bindPopup(popup_2d1d38ad825442d99674689b5f57067e)
+        ;
+
+        
+    
+    
+            var marker_79aabb8038fa4c2393d90dbcbff4658b = L.marker(
+                [33.84538975, 132.7657388],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_82a3368c10af420893f511609d4bee9b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_79aabb8038fa4c2393d90dbcbff4658b.setIcon(icon_82a3368c10af420893f511609d4bee9b);
+        
+    
+        var popup_59fa3dc0a2c94086bc208da143de3e2f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_939086934ef24ed69f8480f224d7c823 = $(`<div id="html_939086934ef24ed69f8480f224d7c823" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城筋鉄門東塀"><font size="4" color="#0000FF">松山城筋鉄門東塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sujiganemon_higashi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/sujiganemon_higashi.html</a></p></div> </div>`)[0];
+            popup_59fa3dc0a2c94086bc208da143de3e2f.setContent(html_939086934ef24ed69f8480f224d7c823);
+        
+
+        marker_79aabb8038fa4c2393d90dbcbff4658b.bindPopup(popup_59fa3dc0a2c94086bc208da143de3e2f)
+        ;
+
+        
+    
+    
+            var marker_fe094c79e603449790409a55e225c626 = L.marker(
+                [33.84540875, 132.7660197],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e836c4e6c4314aca8b6170c1d59568c0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_fe094c79e603449790409a55e225c626.setIcon(icon_e836c4e6c4314aca8b6170c1d59568c0);
+        
+    
+        var popup_b848d962441a42a1bc6e9d348fc686f0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b7e0c324e19c41379a3ce1269856a4a3 = $(`<div id="html_b7e0c324e19c41379a3ce1269856a4a3" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城二の門東塀"><font size="4" color="#0000FF">松山城二の門東塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/2nomon_higasibei.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/2nomon_higasibei.html</a></p></div> </div>`)[0];
+            popup_b848d962441a42a1bc6e9d348fc686f0.setContent(html_b7e0c324e19c41379a3ce1269856a4a3);
+        
+
+        marker_fe094c79e603449790409a55e225c626.bindPopup(popup_b848d962441a42a1bc6e9d348fc686f0)
+        ;
+
+        
+    
+    
+            var marker_463dc40e214e46e690441ce1dd81a02b = L.marker(
+                [33.84531076, 132.7659247],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c391e87b6ee74c1e9a9edcb57e5d5369 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_463dc40e214e46e690441ce1dd81a02b.setIcon(icon_c391e87b6ee74c1e9a9edcb57e5d5369);
+        
+    
+        var popup_31ebd61d7fe04eaebb2b4709e15032aa = L.popup({"maxWidth": "100%"});
+
+        
+            var html_677b2eb691d94802a425165d0b85c0e0 = $(`<div id="html_677b2eb691d94802a425165d0b85c0e0" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城一の門東塀"><font size="4" color="#0000FF">松山城一の門東塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/1nomon_higasibei.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/1nomon_higasibei.html</a></p></div> </div>`)[0];
+            popup_31ebd61d7fe04eaebb2b4709e15032aa.setContent(html_677b2eb691d94802a425165d0b85c0e0);
+        
+
+        marker_463dc40e214e46e690441ce1dd81a02b.bindPopup(popup_31ebd61d7fe04eaebb2b4709e15032aa)
+        ;
+
+        
+    
+    
+            var marker_63066b521633436eab95a70870ff629b = L.marker(
+                [33.84523177, 132.7657797],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_855d9be93f3d465db10ed5648379214d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_63066b521633436eab95a70870ff629b.setIcon(icon_855d9be93f3d465db10ed5648379214d);
+        
+    
+        var popup_be21182c7d0547218c23000beb7a3067 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_200436ece42547ebab8d123c44be88ce = $(`<div id="html_200436ece42547ebab8d123c44be88ce" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城紫竹門東塀"><font size="4" color="#0000FF">松山城紫竹門東塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/shichikumon_higashi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/shichikumon_higashi.html</a></p></div> </div>`)[0];
+            popup_be21182c7d0547218c23000beb7a3067.setContent(html_200436ece42547ebab8d123c44be88ce);
+        
+
+        marker_63066b521633436eab95a70870ff629b.bindPopup(popup_be21182c7d0547218c23000beb7a3067)
+        ;
+
+        
+    
+    
+            var marker_66c58fa1da8f41508f5fe08c722ed81e = L.marker(
+                [33.84521777, 132.7656718],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e445d103f18242c1a1cd93d9027c80cf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_66c58fa1da8f41508f5fe08c722ed81e.setIcon(icon_e445d103f18242c1a1cd93d9027c80cf);
+        
+    
+        var popup_90e2a0967dbd43aea17bdad42af59eb4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a947491def14499d8d29db2043e7fe11 = $(`<div id="html_a947491def14499d8d29db2043e7fe11" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山城紫竹門西塀"><font size="4" color="#0000FF">松山城紫竹門西塀</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市丸之内">愛媛県松山市丸之内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/shichikumon_nishi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/shichikumon_nishi.html</a></p></div> </div>`)[0];
+            popup_90e2a0967dbd43aea17bdad42af59eb4.setContent(html_a947491def14499d8d29db2043e7fe11);
+        
+
+        marker_66c58fa1da8f41508f5fe08c722ed81e.bindPopup(popup_90e2a0967dbd43aea17bdad42af59eb4)
+        ;
+
+        
+    
+    
+            var marker_e2ec273309714c5e93acf6b324ed0de9 = L.marker(
+                [33.81682359, 132.8079032],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_621b705cf4bf4ab9ac0307b47be749c5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_e2ec273309714c5e93acf6b324ed0de9.setIcon(icon_621b705cf4bf4ab9ac0307b47be749c5);
+        
+    
+        var popup_71053828e3a14bf0a20d0c0c83392cc4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_04a2bd96f19c4dbe87360f12c9ed6853 = $(`<div id="html_04a2bd96f19c4dbe87360f12c9ed6853" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=浄土寺本堂　　附厨子１基"><font size="4" color="#0000FF">浄土寺本堂　　附厨子１基</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市鷹子町">愛媛県松山市鷹子町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/joudoji_hondou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/joudoji_hondou.html</a></p></div> </div>`)[0];
+            popup_71053828e3a14bf0a20d0c0c83392cc4.setContent(html_04a2bd96f19c4dbe87360f12c9ed6853);
+        
+
+        marker_e2ec273309714c5e93acf6b324ed0de9.bindPopup(popup_71053828e3a14bf0a20d0c0c83392cc4)
+        ;
+
+        
+    
+    
+            var marker_40f1b84f8b99410c8bc700ca92a532cd = L.marker(
+                [33.85074276, 132.7888577],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e86c3bf3ddec4477b5eae69e6695ec0b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_40f1b84f8b99410c8bc700ca92a532cd.setIcon(icon_e86c3bf3ddec4477b5eae69e6695ec0b);
+        
+    
+        var popup_914888aac68948be9572959af8d7eb33 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_08636ab7002442f3b731882a29733f4f = $(`<div id="html_08636ab7002442f3b731882a29733f4f" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=伊佐爾波神社　本殿"><font size="4" color="#0000FF">伊佐爾波神社　本殿</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市桜谷町">愛媛県松山市桜谷町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isaniwa_honden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isaniwa_honden.html</a></p></div> </div>`)[0];
+            popup_914888aac68948be9572959af8d7eb33.setContent(html_08636ab7002442f3b731882a29733f4f);
+        
+
+        marker_40f1b84f8b99410c8bc700ca92a532cd.bindPopup(popup_914888aac68948be9572959af8d7eb33)
+        ;
+
+        
+    
+    
+            var marker_cf6601d6270547f9949e7723d3c04e01 = L.marker(
+                [33.85074276, 132.7888577],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_1f41a70630ac42b0ab3a5826f9ca264a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_cf6601d6270547f9949e7723d3c04e01.setIcon(icon_1f41a70630ac42b0ab3a5826f9ca264a);
+        
+    
+        var popup_a0c1454283bf46f39100cda246138c85 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a73874dc56d04bf5900763bd0af4f10d = $(`<div id="html_a73874dc56d04bf5900763bd0af4f10d" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=伊佐爾波神社　申殿及び廊下、楼門、回廊"><font size="4" color="#0000FF">伊佐爾波神社　申殿及び廊下、楼門、回廊</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市桜谷町">愛媛県松山市桜谷町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isaniwa_honden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/isaniwa_honden.html</a></p></div> </div>`)[0];
+            popup_a0c1454283bf46f39100cda246138c85.setContent(html_a73874dc56d04bf5900763bd0af4f10d);
+        
+
+        marker_cf6601d6270547f9949e7723d3c04e01.bindPopup(popup_a0c1454283bf46f39100cda246138c85)
+        ;
+
+        
+    
+    
+            var marker_26cd869f571c4a56ac8330a6f5464e70 = L.marker(
+                [33.79817835, 132.7803751],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_8ca939495d384b408dfd42fb96fce686 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_26cd869f571c4a56ac8330a6f5464e70.setIcon(icon_8ca939495d384b408dfd42fb96fce686);
+        
+    
+        var popup_0e81431f62d64568b9ab698ae657c1bc = L.popup({"maxWidth": "100%"});
+
+        
+            var html_8db27eca861c46f8938fbd9d1b32b44e = $(`<div id="html_8db27eca861c46f8938fbd9d1b32b44e" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=豊島家住宅"><font size="4" color="#0000FF">豊島家住宅</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市井門町">愛媛県松山市井門町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/toshimake_juutaku.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/toshimake_juutaku.html</a></p></div> </div>`)[0];
+            popup_0e81431f62d64568b9ab698ae657c1bc.setContent(html_8db27eca861c46f8938fbd9d1b32b44e);
+        
+
+        marker_26cd869f571c4a56ac8330a6f5464e70.bindPopup(popup_0e81431f62d64568b9ab698ae657c1bc)
+        ;
+
+        
+    
+    
+            var marker_90f566eac40c4a5286b1d61a586083f8 = L.marker(
+                [33.76834668, 132.8168584],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_7db882ef6b124b7f826f089716d95d17 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_90f566eac40c4a5286b1d61a586083f8.setIcon(icon_7db882ef6b124b7f826f089716d95d17);
+        
+    
+        var popup_79d122c163234cbaa7f2fe9967cd189e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_8bb2ae731038480c8f5d1fef0b606ed7 = $(`<div id="html_8bb2ae731038480c8f5d1fef0b606ed7" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=渡部家住宅"><font size="4" color="#0000FF">渡部家住宅</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市東方町">愛媛県松山市東方町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/watanabeke_juutaku.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/watanabeke_juutaku.html</a></p></div> </div>`)[0];
+            popup_79d122c163234cbaa7f2fe9967cd189e.setContent(html_8bb2ae731038480c8f5d1fef0b606ed7);
+        
+
+        marker_90f566eac40c4a5286b1d61a586083f8.bindPopup(popup_79d122c163234cbaa7f2fe9967cd189e)
+        ;
+
+        
+    
+    
+            var marker_0d444051c3db4a3fab5a057e2735292a = L.marker(
+                [33.85205391, 132.7864069],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c44b2ecac60946229cd456ca93bbf8f6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_0d444051c3db4a3fab5a057e2735292a.setIcon(icon_c44b2ecac60946229cd456ca93bbf8f6);
+        
+    
+        var popup_677f9ddbe15249f1b1c07ff20f8a173d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c7aea753f76649d4a2675c641ff5ce29 = $(`<div id="html_c7aea753f76649d4a2675c641ff5ce29" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=道後温泉本館"><font size="4" color="#0000FF">道後温泉本館</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市道後湯之町">愛媛県松山市道後湯之町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/dougoonsen_honkan.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kuni/dougoonsen_honkan.html</a></p></div> </div>`)[0];
+            popup_677f9ddbe15249f1b1c07ff20f8a173d.setContent(html_c7aea753f76649d4a2675c641ff5ce29);
+        
+
+        marker_0d444051c3db4a3fab5a057e2735292a.bindPopup(popup_677f9ddbe15249f1b1c07ff20f8a173d)
+        ;
+
+        
+    
+    
+            var marker_7d7b3023c31e419c80edbc68333dcb6b = L.marker(
+                [33.84957884, 132.7864239],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_a01aea5f0bba40f48844d195bf80c027 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_7d7b3023c31e419c80edbc68333dcb6b.setIcon(icon_a01aea5f0bba40f48844d195bf80c027);
+        
+    
+        var popup_44ed8a0bfe0e41cebca29d08d56b6d07 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a024ab0640694a4ba177b42307d86c86 = $(`<div id="html_a024ab0640694a4ba177b42307d86c86" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石造　湯釜"><font size="4" color="#0000FF">石造　湯釜</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市道後公園">愛媛県松山市道後公園</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/isudukuri_yugama.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/isudukuri_yugama.html</a></p></div> </div>`)[0];
+            popup_44ed8a0bfe0e41cebca29d08d56b6d07.setContent(html_a024ab0640694a4ba177b42307d86c86);
+        
+
+        marker_7d7b3023c31e419c80edbc68333dcb6b.bindPopup(popup_44ed8a0bfe0e41cebca29d08d56b6d07)
+        ;
+
+        
+    
+    
+            var marker_f08dd9264f4d409d93be8ea80960dd2a = L.marker(
+                [33.89132101, 132.7396529],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_3e25c1c13b98466fa04a761c61e76c5c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f08dd9264f4d409d93be8ea80960dd2a.setIcon(icon_3e25c1c13b98466fa04a761c61e76c5c);
+        
+    
+        var popup_13a9a8bfc5af4f96bbf44ca810c5d730 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c2ededc6e61d40b490da899e12ed9918 = $(`<div id="html_c2ededc6e61d40b490da899e12ed9918" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=円明寺八脚門"><font size="4" color="#0000FF">円明寺八脚門</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市和気町1">愛媛県松山市和気町1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/enmyouji_hakkyakumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/enmyouji_hakkyakumon.html</a></p></div> </div>`)[0];
+            popup_13a9a8bfc5af4f96bbf44ca810c5d730.setContent(html_c2ededc6e61d40b490da899e12ed9918);
+        
+
+        marker_f08dd9264f4d409d93be8ea80960dd2a.bindPopup(popup_13a9a8bfc5af4f96bbf44ca810c5d730)
+        ;
+
+        
+    
+    
+            var marker_a65c82983d8541fb8d4b5d07c8d5f592 = L.marker(
+                [33.89179097, 132.7396629],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_ab188511fe574bd0865a3b080cd5258b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_a65c82983d8541fb8d4b5d07c8d5f592.setIcon(icon_ab188511fe574bd0865a3b080cd5258b);
+        
+    
+        var popup_1addd2760e424cca9a3bc8914772d095 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a40ffc5b82be4bc8892d07e28d776786 = $(`<div id="html_a40ffc5b82be4bc8892d07e28d776786" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=円明寺厨子"><font size="4" color="#0000FF">円明寺厨子</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市和気町1">愛媛県松山市和気町1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/enmyouji_zushi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/enmyouji_zushi.html</a></p></div> </div>`)[0];
+            popup_1addd2760e424cca9a3bc8914772d095.setContent(html_a40ffc5b82be4bc8892d07e28d776786);
+        
+
+        marker_a65c82983d8541fb8d4b5d07c8d5f592.bindPopup(popup_1addd2760e424cca9a3bc8914772d095)
+        ;
+
+        
+    
+    
+            var marker_0fa8352775694ae886f0b89714c877df = L.marker(
+                [33.84254755, 132.7799419],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_3629eb1fafea451f815564e3aedbf699 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_0fa8352775694ae886f0b89714c877df.setIcon(icon_3629eb1fafea451f815564e3aedbf699);
+        
+    
+        var popup_881e0b61e4474dc18417417ac607d798 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_822d4f8ff03c4820bfb3cd0f6fbdb1b3 = $(`<div id="html_822d4f8ff03c4820bfb3cd0f6fbdb1b3" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=明教館"><font size="4" color="#0000FF">明教館</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市持田町2">愛媛県松山市持田町2</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/maikyoukan.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/maikyoukan.html</a></p></div> </div>`)[0];
+            popup_881e0b61e4474dc18417417ac607d798.setContent(html_822d4f8ff03c4820bfb3cd0f6fbdb1b3);
+        
+
+        marker_0fa8352775694ae886f0b89714c877df.bindPopup(popup_881e0b61e4474dc18417417ac607d798)
+        ;
+
+        
+    
+    
+            var marker_a8aed7fdb21642ff97652ed383e00e82 = L.marker(
+                [33.84252119, 132.7682055],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c19a41e8d80448ada5f17cd9b4bcef7a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_a8aed7fdb21642ff97652ed383e00e82.setIcon(icon_c19a41e8d80448ada5f17cd9b4bcef7a);
+        
+    
+        var popup_a376458f08c44728bc5dcdf5ea432a7e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a3b83332689140cc90b6af068eb2dc62 = $(`<div id="html_a3b83332689140cc90b6af068eb2dc62" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=萬翠荘（旧久松家別邸）"><font size="4" color="#0000FF">萬翠荘（旧久松家別邸）</font></a></h3></strong><hr><p>文化財分類: 重要文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市一番町3">愛媛県松山市一番町3</a></p><p>説明ページ: <a href=http://tnlscm01.city.matsuyama.ehime.jp:10080/5644e075-cb0a-4dcf-ae1e-9fb6a61f7e7c/bansuisou2016000800.html>http://tnlscm01.city.matsuyama.ehime.jp:10080/5644e075-cb0a-4dcf-ae1e-9fb6a61f7e7c/bansuisou2016000800.html</a></p></div> </div>`)[0];
+            popup_a376458f08c44728bc5dcdf5ea432a7e.setContent(html_a3b83332689140cc90b6af068eb2dc62);
+        
+
+        marker_a8aed7fdb21642ff97652ed383e00e82.bindPopup(popup_a376458f08c44728bc5dcdf5ea432a7e)
+        ;
+
+        
+    
+    
+            var marker_70fbebcbf14d425a9e431d7996c9d847 = L.marker(
+                [33.97114664, 132.7967168],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_964c363de93a4f62a6abbf3ec87c4715 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_70fbebcbf14d425a9e431d7996c9d847.setIcon(icon_964c363de93a4f62a6abbf3ec87c4715);
+        
+    
+        var popup_2bf441422ed4493bb12ecf77fd964635 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_031060cd0fe547a494e9370a2fd4995f = $(`<div id="html_031060cd0fe547a494e9370a2fd4995f" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=国津比古命神社楼門"><font size="4" color="#0000FF">国津比古命神社楼門</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市高田">愛媛県松山市高田</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/kunituhiko_roumon.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/kunituhiko_roumon.html</a></p></div> </div>`)[0];
+            popup_2bf441422ed4493bb12ecf77fd964635.setContent(html_031060cd0fe547a494e9370a2fd4995f);
+        
+
+        marker_70fbebcbf14d425a9e431d7996c9d847.bindPopup(popup_2bf441422ed4493bb12ecf77fd964635)
+        ;
+
+        
+    
+    
+            var marker_35707f5cd46a43c2a0674d5e422f39d0 = L.marker(
+                [33.93026737, 132.7834353],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_70bb6709d36243d796aeee528fec323d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_35707f5cd46a43c2a0674d5e422f39d0.setIcon(icon_70bb6709d36243d796aeee528fec323d);
+        
+    
+        var popup_f21d848ae4c846cdb320cf4348a95de9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6d50cf04ab5c47b5a53236d3fa70f44c = $(`<div id="html_6d50cf04ab5c47b5a53236d3fa70f44c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=雲門寺厨子　附神像１躯"><font size="4" color="#0000FF">雲門寺厨子　附神像１躯</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市本谷">愛媛県松山市本谷</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/unmonji_zusi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/unmonji_zusi.html</a></p></div> </div>`)[0];
+            popup_f21d848ae4c846cdb320cf4348a95de9.setContent(html_6d50cf04ab5c47b5a53236d3fa70f44c);
+        
+
+        marker_35707f5cd46a43c2a0674d5e422f39d0.bindPopup(popup_f21d848ae4c846cdb320cf4348a95de9)
+        ;
+
+        
+    
+    
+            var marker_78b5dedfc79d49cfa7358cb444844860 = L.marker(
+                [33.96776998, 132.7952091],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_9e68d7f3817d43c99a5c78ab0483f896 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_78b5dedfc79d49cfa7358cb444844860.setIcon(icon_9e68d7f3817d43c99a5c78ab0483f896);
+        
+    
+        var popup_a15bf9bcb1b540769284caf0c76a1190 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_68e3ffedc5b741c09feff72fed5d2c5c = $(`<div id="html_68e3ffedc5b741c09feff72fed5d2c5c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石造宝篋印塔"><font size="4" color="#0000FF">石造宝篋印塔</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市八反地">愛媛県松山市八反地</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/hattanchihoutouinkyo.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/hattanchihoutouinkyo.html</a></p></div> </div>`)[0];
+            popup_a15bf9bcb1b540769284caf0c76a1190.setContent(html_68e3ffedc5b741c09feff72fed5d2c5c);
+        
+
+        marker_78b5dedfc79d49cfa7358cb444844860.bindPopup(popup_a15bf9bcb1b540769284caf0c76a1190)
+        ;
+
+        
+    
+    
+            var marker_f234372136bb4801a34ea1187974ea4d = L.marker(
+                [33.96526265, 132.6268746],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c4d83f5ac4204c5a95fd3798bc205a4e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f234372136bb4801a34ea1187974ea4d.setIcon(icon_c4d83f5ac4204c5a95fd3798bc205a4e);
+        
+    
+        var popup_e2a211421561462182e1c061c8998445 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_edd006b8f7c7481b8c8a66c466306f28 = $(`<div id="html_edd006b8f7c7481b8c8a66c466306f28" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=板碑（文中の板碑）"><font size="4" color="#0000FF">板碑（文中の板碑）</font></a></h3></strong><hr><p>文化財分類: 県指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市小浜">愛媛県松山市小浜</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/bunchuuno_itahi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/ken/bunchuuno_itahi.html</a></p></div> </div>`)[0];
+            popup_e2a211421561462182e1c061c8998445.setContent(html_edd006b8f7c7481b8c8a66c466306f28);
+        
+
+        marker_f234372136bb4801a34ea1187974ea4d.bindPopup(popup_e2a211421561462182e1c061c8998445)
+        ;
+
+        
+    
+    
+            var marker_890b719263524376b1007a5dc2bff638 = L.marker(
+                [33.75811993, 132.8130744],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_b784ac083a8447ff90243143e84a5f56 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_890b719263524376b1007a5dc2bff638.setIcon(icon_b784ac083a8447ff90243143e84a5f56);
+        
+    
+        var popup_19c9d12544ec463dbfbc6041f21dea7d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_37fa6a4de6db4bc2ad4b41293ec77a4c = $(`<div id="html_37fa6a4de6db4bc2ad4b41293ec77a4c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=層塔"><font size="4" color="#0000FF">層塔</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市浄瑠璃町">愛媛県松山市浄瑠璃町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/soutou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/soutou.html</a></p></div> </div>`)[0];
+            popup_19c9d12544ec463dbfbc6041f21dea7d.setContent(html_37fa6a4de6db4bc2ad4b41293ec77a4c);
+        
+
+        marker_890b719263524376b1007a5dc2bff638.bindPopup(popup_19c9d12544ec463dbfbc6041f21dea7d)
+        ;
+
+        
+    
+    
+            var marker_f27d32c3d369420eb61d9f8cafc37f42 = L.marker(
+                [33.75812393, 132.8130714],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_8702573a10ec4046a263e2b10e25c2a2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f27d32c3d369420eb61d9f8cafc37f42.setIcon(icon_8702573a10ec4046a263e2b10e25c2a2);
+        
+    
+        var popup_0926deea9e9a49a5afd51e335e9a8012 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_54546a9b627e46b88896128e4fed6798 = $(`<div id="html_54546a9b627e46b88896128e4fed6798" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=宝篋印塔"><font size="4" color="#0000FF">宝篋印塔</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市浄瑠璃町">愛媛県松山市浄瑠璃町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/yasaka_houkyouintou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/yasaka_houkyouintou.html</a></p></div> </div>`)[0];
+            popup_0926deea9e9a49a5afd51e335e9a8012.setContent(html_54546a9b627e46b88896128e4fed6798);
+        
+
+        marker_f27d32c3d369420eb61d9f8cafc37f42.bindPopup(popup_0926deea9e9a49a5afd51e335e9a8012)
+        ;
+
+        
+    
+    
+            var marker_be96cea2df5249b4a922bd424767a8a7 = L.marker(
+                [33.89287066, 132.639074],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_671b26ae2bff49b99642f7e994ba43e0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_be96cea2df5249b4a922bd424767a8a7.setIcon(icon_671b26ae2bff49b99642f7e994ba43e0);
+        
+    
+        var popup_0fcc06e6975a4a03861691abee833464 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a3f42b11a1284b2cbf792cb4bfbc4713 = $(`<div id="html_a3f42b11a1284b2cbf792cb4bfbc4713" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=釣島灯台吏員退息所及び倉庫"><font size="4" color="#0000FF">釣島灯台吏員退息所及び倉庫</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市泊町">愛媛県松山市泊町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/turusima_kyuukansha.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/turusima_kyuukansha.html</a></p></div> </div>`)[0];
+            popup_0fcc06e6975a4a03861691abee833464.setContent(html_a3f42b11a1284b2cbf792cb4bfbc4713);
+        
+
+        marker_be96cea2df5249b4a922bd424767a8a7.bindPopup(popup_0fcc06e6975a4a03861691abee833464)
+        ;
+
+        
+    
+    
+            var marker_aa1002ddcc154bf3b3390573732da3bf = L.marker(
+                [33.8024178, 132.8468428],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_fdd995b7e5ec42748dc0d5fb89201357 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_aa1002ddcc154bf3b3390573732da3bf.setIcon(icon_fdd995b7e5ec42748dc0d5fb89201357);
+        
+    
+        var popup_d104c1f329384ab59b605700860adbf7 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e7088e7c29e94d34a6c864f095aeb3f3 = $(`<div id="html_e7088e7c29e94d34a6c864f095aeb3f3" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=日吉神社本殿"><font size="4" color="#0000FF">日吉神社本殿</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市南梅本町字上方">愛媛県松山市南梅本町字上方</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/hiyoshijinnja_honden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/hiyoshijinnja_honden.html</a></p></div> </div>`)[0];
+            popup_d104c1f329384ab59b605700860adbf7.setContent(html_e7088e7c29e94d34a6c864f095aeb3f3);
+        
+
+        marker_aa1002ddcc154bf3b3390573732da3bf.bindPopup(popup_d104c1f329384ab59b605700860adbf7)
+        ;
+
+        
+    
+    
+            var marker_c462c042a0a143db8767d82b64079eb1 = L.marker(
+                [33.85672079, 132.7833463],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_0a50216c6d9b47a9ab5b2f40caa5ce14 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_c462c042a0a143db8767d82b64079eb1.setIcon(icon_0a50216c6d9b47a9ab5b2f40caa5ce14);
+        
+    
+        var popup_5779341297074b37a37e9e26f818a405 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_da3d6a1b73a04eb4b61945cd2217678e = $(`<div id="html_da3d6a1b73a04eb4b61945cd2217678e" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山神社社殿"><font size="4" color="#0000FF">松山神社社殿</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市祝谷東町">愛媛県松山市祝谷東町</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/matuyamajinja_shaden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/matuyamajinja_shaden.html</a></p></div> </div>`)[0];
+            popup_5779341297074b37a37e9e26f818a405.setContent(html_da3d6a1b73a04eb4b61945cd2217678e);
+        
+
+        marker_c462c042a0a143db8767d82b64079eb1.bindPopup(popup_5779341297074b37a37e9e26f818a405)
+        ;
+
+        
+    
+    
+            var marker_354a52f5c8624bf2a18e517ba06d530a = L.marker(
+                [33.97731923, 132.8068284],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_7fa0c26e6f1749aa9aaba8fd8b3c62d2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_354a52f5c8624bf2a18e517ba06d530a.setIcon(icon_7fa0c26e6f1749aa9aaba8fd8b3c62d2);
+        
+    
+        var popup_7fca99d7c3d84e28913b79e18f4995c3 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a7957325389c40b8a983d17b485ea482 = $(`<div id="html_a7957325389c40b8a983d17b485ea482" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=金毘羅宮御神像･本殿･拝殿"><font size="4" color="#0000FF">金毘羅宮御神像･本殿･拝殿</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市庄">愛媛県松山市庄</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/shou_konpiraguu.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/shou_konpiraguu.html</a></p></div> </div>`)[0];
+            popup_7fca99d7c3d84e28913b79e18f4995c3.setContent(html_a7957325389c40b8a983d17b485ea482);
+        
+
+        marker_354a52f5c8624bf2a18e517ba06d530a.bindPopup(popup_7fca99d7c3d84e28913b79e18f4995c3)
+        ;
+
+        
+    
+    
+            var marker_53237f8b46dd496ca2d310da9dbe7eeb = L.marker(
+                [34.00716111, 132.8107802],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_4992ecd953d544cdb9ae674f1875dd2e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_53237f8b46dd496ca2d310da9dbe7eeb.setIcon(icon_4992ecd953d544cdb9ae674f1875dd2e);
+        
+    
+        var popup_cd2729e74cd9403fbd4bbede5332b754 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7f423407515841b58788a726a22eab5a = $(`<div id="html_7f423407515841b58788a726a22eab5a" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=郡境石"><font size="4" color="#0000FF">郡境石</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市浅海本谷">愛媛県松山市浅海本谷</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/asanami_sakaiishi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/asanami_sakaiishi.html</a></p></div> </div>`)[0];
+            popup_cd2729e74cd9403fbd4bbede5332b754.setContent(html_7f423407515841b58788a726a22eab5a);
+        
+
+        marker_53237f8b46dd496ca2d310da9dbe7eeb.bindPopup(popup_cd2729e74cd9403fbd4bbede5332b754)
+        ;
+
+        
+    
+    
+            var marker_a2a91b0600d2491c8e9094df0f62f82c = L.marker(
+                [33.93031422, 132.768537],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d2b75cae80214947b6f78a2e3571832c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_a2a91b0600d2491c8e9094df0f62f82c.setIcon(icon_d2b75cae80214947b6f78a2e3571832c);
+        
+    
+        var popup_44b41a9b844d43cb9c50bbd929202c81 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_96e1e87255244d35811144d2dbef66a5 = $(`<div id="html_96e1e87255244d35811144d2dbef66a5" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=六地蔵の板碑"><font size="4" color="#0000FF">六地蔵の板碑</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市磯河内">愛媛県松山市磯河内</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/rokuzouchino_itabi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/rokuzouchino_itabi.html</a></p></div> </div>`)[0];
+            popup_44b41a9b844d43cb9c50bbd929202c81.setContent(html_96e1e87255244d35811144d2dbef66a5);
+        
+
+        marker_a2a91b0600d2491c8e9094df0f62f82c.bindPopup(popup_44b41a9b844d43cb9c50bbd929202c81)
+        ;
+
+        
+    
+    
+            var marker_845a138d68bd493a8d3a0c9568b01539 = L.marker(
+                [33.93979825, 132.7782383],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_b74646331e5b4dd7845cbbb2b59997c1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_845a138d68bd493a8d3a0c9568b01539.setIcon(icon_b74646331e5b4dd7845cbbb2b59997c1);
+        
+    
+        var popup_7e73e81aa77f475fb405ec70aa5a7356 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e07d6a8ea9ca4b2cbe3c7383813acd8c = $(`<div id="html_e07d6a8ea9ca4b2cbe3c7383813acd8c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=層塔・五輪塔"><font size="4" color="#0000FF">層塔・五輪塔</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市苞木">愛媛県松山市苞木</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/suboki_gorintou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/suboki_gorintou.html</a></p></div> </div>`)[0];
+            popup_7e73e81aa77f475fb405ec70aa5a7356.setContent(html_e07d6a8ea9ca4b2cbe3c7383813acd8c);
+        
+
+        marker_845a138d68bd493a8d3a0c9568b01539.bindPopup(popup_7e73e81aa77f475fb405ec70aa5a7356)
+        ;
+
+        
+    
+    
+            var marker_02ccd0dc85a14734b6c0764542ec4f0d = L.marker(
+                [33.95132097, 132.8011728],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_f882332d1157403298ec8116a9ab77a0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_02ccd0dc85a14734b6c0764542ec4f0d.setIcon(icon_f882332d1157403298ec8116a9ab77a0);
+        
+    
+        var popup_f0376f5e3e774c6f8317720c72c5bf5b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b3bd09a31b0e440b927d03f1c3af35df = $(`<div id="html_b3bd09a31b0e440b927d03f1c3af35df" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石造阿弥陀如來坐像"><font size="4" color="#0000FF">石造阿弥陀如來坐像</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市善応寺">愛媛県松山市善応寺</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/zenouji_amidazazou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/zenouji_amidazazou.html</a></p></div> </div>`)[0];
+            popup_f0376f5e3e774c6f8317720c72c5bf5b.setContent(html_b3bd09a31b0e440b927d03f1c3af35df);
+        
+
+        marker_02ccd0dc85a14734b6c0764542ec4f0d.bindPopup(popup_f0376f5e3e774c6f8317720c72c5bf5b)
+        ;
+
+        
+    
+    
+            var marker_665bc50083f64f2d91504b8469b1f34b = L.marker(
+                [33.95901817, 132.6254497],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d3a254302b054e9fb8bb50a8814df56d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_665bc50083f64f2d91504b8469b1f34b.setIcon(icon_d3a254302b054e9fb8bb50a8814df56d);
+        
+    
+        var popup_62e908cd1f0544bbae59a472c79fc9b3 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cbc6662128ad46ab8310a87c9a193ccb = $(`<div id="html_cbc6662128ad46ab8310a87c9a193ccb" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=貞治年間の五輪塔残欠と板碑"><font size="4" color="#0000FF">貞治年間の五輪塔残欠と板碑</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市長師">愛媛県松山市長師</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/sinpukuji_zanketu.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/sinpukuji_zanketu.html</a></p></div> </div>`)[0];
+            popup_62e908cd1f0544bbae59a472c79fc9b3.setContent(html_cbc6662128ad46ab8310a87c9a193ccb);
+        
+
+        marker_665bc50083f64f2d91504b8469b1f34b.bindPopup(popup_62e908cd1f0544bbae59a472c79fc9b3)
+        ;
+
+        
+    
+    
+            var marker_26e8e3b2f59c48e3921fe52f3502cfc5 = L.marker(
+                [33.96258113, 132.6237437],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_13e3bea4d7704b7a85646c1328015d0b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_26e8e3b2f59c48e3921fe52f3502cfc5.setIcon(icon_13e3bea4d7704b7a85646c1328015d0b);
+        
+    
+        var popup_fe4c8ce4f1d94a0d9dff5c25d085f64f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b2213ccd083742eb869e760bfd39b31b = $(`<div id="html_b2213ccd083742eb869e760bfd39b31b" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=長師河上家の石塔"><font size="4" color="#0000FF">長師河上家の石塔</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市長師">愛媛県松山市長師</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/nagasi_sekitou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/nagasi_sekitou.html</a></p></div> </div>`)[0];
+            popup_fe4c8ce4f1d94a0d9dff5c25d085f64f.setContent(html_b2213ccd083742eb869e760bfd39b31b);
+        
+
+        marker_26e8e3b2f59c48e3921fe52f3502cfc5.bindPopup(popup_fe4c8ce4f1d94a0d9dff5c25d085f64f)
+        ;
+
+        
+    
+    
+            var marker_3948a866afde4e858c71191905f1ee53 = L.marker(
+                [33.97442145, 132.6183003],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_4ed40e2f59c14400b0ed4580ce63d7f4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_3948a866afde4e858c71191905f1ee53.setIcon(icon_4ed40e2f59c14400b0ed4580ce63d7f4);
+        
+    
+        var popup_473ced367b0649cab746ade23252d37e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_5d7ce6616f5f41dab439a2724e3d6730 = $(`<div id="html_5d7ce6616f5f41dab439a2724e3d6730" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=長隆寺五輪塔群"><font size="4" color="#0000FF">長隆寺五輪塔群</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市中島大浦">愛媛県松山市中島大浦</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/chouryuuji_gorintou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/chouryuuji_gorintou.html</a></p></div> </div>`)[0];
+            popup_473ced367b0649cab746ade23252d37e.setContent(html_5d7ce6616f5f41dab439a2724e3d6730);
+        
+
+        marker_3948a866afde4e858c71191905f1ee53.bindPopup(popup_473ced367b0649cab746ade23252d37e)
+        ;
+
+        
+    
+    
+            var marker_aabafc54ab4d46cf8c856e5fc9125953 = L.marker(
+                [33.96930241, 132.6291264],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_4c9a80167ba64155b475a6c5af3cc156 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_aabafc54ab4d46cf8c856e5fc9125953.setIcon(icon_4c9a80167ba64155b475a6c5af3cc156);
+        
+    
+        var popup_34110ccba6b64e9f8c16dbd53f57962f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0c7b2d0a693749f68bb56afc4bd4ab36 = $(`<div id="html_0c7b2d0a693749f68bb56afc4bd4ab36" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=僧都碑"><font size="4" color="#0000FF">僧都碑</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市小浜下の屋敷">愛媛県松山市小浜下の屋敷</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/obama_souzuhi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/obama_souzuhi.html</a></p></div> </div>`)[0];
+            popup_34110ccba6b64e9f8c16dbd53f57962f.setContent(html_0c7b2d0a693749f68bb56afc4bd4ab36);
+        
+
+        marker_aabafc54ab4d46cf8c856e5fc9125953.bindPopup(popup_34110ccba6b64e9f8c16dbd53f57962f)
+        ;
+
+        
+    
+    
+            var marker_5e2a3d853f244fb387eb2a50a9b54058 = L.marker(
+                [33.96997408, 132.5881037],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_27ed27e163b548b793d864b7c44244fb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_5e2a3d853f244fb387eb2a50a9b54058.setIcon(icon_27ed27e163b548b793d864b7c44244fb);
+        
+    
+        var popup_faf145f260e94101a167030d813c62c8 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_50bafa0414214b72b39ce8b39e362e2b = $(`<div id="html_50bafa0414214b72b39ce8b39e362e2b" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=宇和間港建設碑"><font size="4" color="#0000FF">宇和間港建設碑</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市宇和間">愛媛県松山市宇和間</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/uwama_kensetsuhi.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/uwama_kensetsuhi.html</a></p></div> </div>`)[0];
+            popup_faf145f260e94101a167030d813c62c8.setContent(html_50bafa0414214b72b39ce8b39e362e2b);
+        
+
+        marker_5e2a3d853f244fb387eb2a50a9b54058.bindPopup(popup_faf145f260e94101a167030d813c62c8)
+        ;
+
+        
+    
+    
+            var marker_f28add0f13cd4afda4101b974ccd89b8 = L.marker(
+                [33.99622679, 132.6401068],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_9acc0141ecac43449d6a0f1a921fedf2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f28add0f13cd4afda4101b974ccd89b8.setIcon(icon_9acc0141ecac43449d6a0f1a921fedf2);
+        
+    
+        var popup_46399d3423a64ec5aebc6a490bff41e6 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c29271d098f64e088a65d24c524f1f12 = $(`<div id="html_c29271d098f64e088a65d24c524f1f12" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=桑名神社本殿"><font size="4" color="#0000FF">桑名神社本殿</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市中島粟井">愛媛県松山市中島粟井</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/kuwanajinja_nonden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/kuwanajinja_nonden.html</a></p></div> </div>`)[0];
+            popup_46399d3423a64ec5aebc6a490bff41e6.setContent(html_c29271d098f64e088a65d24c524f1f12);
+        
+
+        marker_f28add0f13cd4afda4101b974ccd89b8.bindPopup(popup_46399d3423a64ec5aebc6a490bff41e6)
+        ;
+
+        
+    
+    
+            var marker_98eb3e17154e41c0a51d464e603696b9 = L.marker(
+                [33.84225469, 132.7820661],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_e07f7d00250545d98527332db08de689 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_98eb3e17154e41c0a51d464e603696b9.setIcon(icon_e07f7d00250545d98527332db08de689);
+        
+    
+        var popup_1e5ea0da1aad48478bd3d729d7dee74d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a849483beb80404c8211095bb4315b0b = $(`<div id="html_a849483beb80404c8211095bb4315b0b" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=愛媛大学附属中学校講堂（旧制松山高等学校講堂）"><font size="4" color="#0000FF">愛媛大学附属中学校講堂（旧制松山高等学校講堂）</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市持田町1-5">愛媛県松山市持田町1-5</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/fuzokuchuu_koudou.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/fuzokuchuu_koudou.html</a></p></div> </div>`)[0];
+            popup_1e5ea0da1aad48478bd3d729d7dee74d.setContent(html_a849483beb80404c8211095bb4315b0b);
+        
+
+        marker_98eb3e17154e41c0a51d464e603696b9.bindPopup(popup_1e5ea0da1aad48478bd3d729d7dee74d)
+        ;
+
+        
+    
+    
+            var marker_4563d92023434e4c873c06834c14269e = L.marker(
+                [33.86525558, 132.7114562],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_46a37267adfc420cb98182f905a6a322 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_4563d92023434e4c873c06834c14269e.setIcon(icon_46a37267adfc420cb98182f905a6a322);
+        
+    
+        var popup_308afd4ebdf540b0b366c9407d504d4d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ee6e00b110ab4c0981d35f6cd7708399 = $(`<div id="html_ee6e00b110ab4c0981d35f6cd7708399" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=石崎汽船本社"><font size="4" color="#0000FF">石崎汽船本社</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市三津1-4-9">愛媛県松山市三津1-4-9</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/isizakikisen_honsha.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/isizakikisen_honsha.html</a></p></div> </div>`)[0];
+            popup_308afd4ebdf540b0b366c9407d504d4d.setContent(html_ee6e00b110ab4c0981d35f6cd7708399);
+        
+
+        marker_4563d92023434e4c873c06834c14269e.bindPopup(popup_308afd4ebdf540b0b366c9407d504d4d)
+        ;
+
+        
+    
+    
+            var marker_b9b4bf108a5c4e7d8b1c5118b059b562 = L.marker(
+                [33.81326928, 132.703936],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_520a1161c7184fdebc18ebc2e6d9994e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_b9b4bf108a5c4e7d8b1c5118b059b562.setIcon(icon_520a1161c7184fdebc18ebc2e6d9994e);
+        
+    
+        var popup_143050b7f29c4546a6dd526f72680781 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ed13a5fa0ab94d2ba5a880dd54d2f67c = $(`<div id="html_ed13a5fa0ab94d2ba5a880dd54d2f67c" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=鍵谷カナ頌功堂"><font size="4" color="#0000FF">鍵谷カナ頌功堂</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市西垣生町1250">愛媛県松山市西垣生町1250</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/kagiyakana_shoukoudo.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/kagiyakana_shoukoudo.html</a></p></div> </div>`)[0];
+            popup_143050b7f29c4546a6dd526f72680781.setContent(html_ed13a5fa0ab94d2ba5a880dd54d2f67c);
+        
+
+        marker_b9b4bf108a5c4e7d8b1c5118b059b562.bindPopup(popup_143050b7f29c4546a6dd526f72680781)
+        ;
+
+        
+    
+    
+            var marker_533a72dfae0d4af8b99d131604b86d76 = L.marker(
+                [33.84505912, 132.7767787],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_adb9bbd310de4adabacef50bd49b685e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_533a72dfae0d4af8b99d131604b86d76.setIcon(icon_adb9bbd310de4adabacef50bd49b685e);
+        
+    
+        var popup_97372dbd93c048d79d6a0de6f32623f5 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a4c7a1d847d3441690454cbc07c06b6b = $(`<div id="html_a4c7a1d847d3441690454cbc07c06b6b" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=愛媛県教育会館"><font size="4" color="#0000FF">愛媛県教育会館</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市北持田町131">愛媛県松山市北持田町131</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/ehime_kyouikukaikan.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/ehime_kyouikukaikan.html</a></p></div> </div>`)[0];
+            popup_97372dbd93c048d79d6a0de6f32623f5.setContent(html_a4c7a1d847d3441690454cbc07c06b6b);
+        
+
+        marker_533a72dfae0d4af8b99d131604b86d76.bindPopup(popup_97372dbd93c048d79d6a0de6f32623f5)
+        ;
+
+        
+    
+    
+            var marker_eaa3586f273a412d81ac8b7b2a616fb6 = L.marker(
+                [33.84370734, 132.7775996],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d634138d95d54a43a11973d5fa6fedf5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_eaa3586f273a412d81ac8b7b2a616fb6.setIcon(icon_d634138d95d54a43a11973d5fa6fedf5);
+        
+    
+        var popup_fa5637b5c1774a08b5e9f79c9ded0ff2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c608260b8d04477fb4b3b47550b4f4a8 = $(`<div id="html_c608260b8d04477fb4b3b47550b4f4a8" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=松山地方気象台"><font size="4" color="#0000FF">松山地方気象台</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市北持田町102">愛媛県松山市北持田町102</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/matsuya_makishoudai.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/matsuya_makishoudai.html</a></p></div> </div>`)[0];
+            popup_fa5637b5c1774a08b5e9f79c9ded0ff2.setContent(html_c608260b8d04477fb4b3b47550b4f4a8);
+        
+
+        marker_eaa3586f273a412d81ac8b7b2a616fb6.bindPopup(popup_fa5637b5c1774a08b5e9f79c9ded0ff2)
+        ;
+
+        
+    
+    
+            var marker_528e6e8f64b5429d8962e813ce1b012d = L.marker(
+                [33.86523971, 132.7123243],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_26eaa035c88741ef81fdb4c75f80b707 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_528e6e8f64b5429d8962e813ce1b012d.setIcon(icon_26eaa035c88741ef81fdb4c75f80b707);
+        
+    
+        var popup_201a7a2bcbf14e87bd18907f7be01f63 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cc4c94384ba442b5af4d297bfa28e916 = $(`<div id="html_cc4c94384ba442b5af4d297bfa28e916" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=森家住宅主屋"><font size="4" color="#0000FF">森家住宅主屋</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市三津1">愛媛県松山市三津1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/morikejuutaku.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/morikejuutaku.html</a></p></div> </div>`)[0];
+            popup_201a7a2bcbf14e87bd18907f7be01f63.setContent(html_cc4c94384ba442b5af4d297bfa28e916);
+        
+
+        marker_528e6e8f64b5429d8962e813ce1b012d.bindPopup(popup_201a7a2bcbf14e87bd18907f7be01f63)
+        ;
+
+        
+    
+    
+            var marker_500f3913e9ad4421a0264a8ec9e5dfb6 = L.marker(
+                [33.99116254, 132.6213993],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_d3d9bc2516db4278ad846b00c72760b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_500f3913e9ad4421a0264a8ec9e5dfb6.setIcon(icon_d3d9bc2516db4278ad846b00c72760b9);
+        
+    
+        var popup_04d4ded21ff14c1da73877dd98e4e0ac = L.popup({"maxWidth": "100%"});
+
+        
+            var html_99f50be2bbf148578f24283145a4ba51 = $(`<div id="html_99f50be2bbf148578f24283145a4ba51" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=賀茂神社本殿"><font size="4" color="#0000FF">賀茂神社本殿</font></a></h3></strong><hr><p>文化財分類: 市指定有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市畑里">愛媛県松山市畑里</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/kamojinja_monden.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/shi/kamojinja_monden.html</a></p></div> </div>`)[0];
+            popup_04d4ded21ff14c1da73877dd98e4e0ac.setContent(html_99f50be2bbf148578f24283145a4ba51);
+        
+
+        marker_500f3913e9ad4421a0264a8ec9e5dfb6.bindPopup(popup_04d4ded21ff14c1da73877dd98e4e0ac)
+        ;
+
+        
+    
+    
+            var marker_031b588cde7d42cf9eb5849e46781187 = L.marker(
+                [33.84367217, 132.7814531],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_c72b58af8aec41a7a06f3a35ae696336 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_031b588cde7d42cf9eb5849e46781187.setIcon(icon_c72b58af8aec41a7a06f3a35ae696336);
+        
+    
+        var popup_86c1d6ef9ab04362a26abc341a08cd20 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c0e0bfa0c29e4331922997219660de59 = $(`<div id="html_c0e0bfa0c29e4331922997219660de59" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=八束家住宅主屋"><font size="4" color="#0000FF">八束家住宅主屋</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市持田町3-242-1">愛媛県松山市持田町3-242-1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuduka_shuoku.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuduka_shuoku.html</a></p></div> </div>`)[0];
+            popup_86c1d6ef9ab04362a26abc341a08cd20.setContent(html_c0e0bfa0c29e4331922997219660de59);
+        
+
+        marker_031b588cde7d42cf9eb5849e46781187.bindPopup(popup_86c1d6ef9ab04362a26abc341a08cd20)
+        ;
+
+        
+    
+    
+            var marker_f2a81050cea34ed1b2dc9b1d7152e4fc = L.marker(
+                [33.84377292, 132.7813374],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_876d40603289421bb3806c036b5b7c63 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_f2a81050cea34ed1b2dc9b1d7152e4fc.setIcon(icon_876d40603289421bb3806c036b5b7c63);
+        
+    
+        var popup_b3cea4d8de6247d6816831f28238d755 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_53749c6f8a9b42169e4ef973107a8523 = $(`<div id="html_53749c6f8a9b42169e4ef973107a8523" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=八束家住宅蔵"><font size="4" color="#0000FF">八束家住宅蔵</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市持田町3-242-1">愛媛県松山市持田町3-242-1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuduka_kura.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuduka_kura.html</a></p></div> </div>`)[0];
+            popup_b3cea4d8de6247d6816831f28238d755.setContent(html_53749c6f8a9b42169e4ef973107a8523);
+        
+
+        marker_f2a81050cea34ed1b2dc9b1d7152e4fc.bindPopup(popup_b3cea4d8de6247d6816831f28238d755)
+        ;
+
+        
+    
+    
+            var marker_6e40e3486af942d08b16ac8d522ef241 = L.marker(
+                [33.84353706, 132.7814744],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_73c9a0bc1ec34ab4a20bfd0b7b9297dc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_6e40e3486af942d08b16ac8d522ef241.setIcon(icon_73c9a0bc1ec34ab4a20bfd0b7b9297dc);
+        
+    
+        var popup_3a2a699f142b4fa2ba9b1b7830d4c406 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_19eba92bd4e0401c93c76c19bfab95b5 = $(`<div id="html_19eba92bd4e0401c93c76c19bfab95b5" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=八束家住宅待合"><font size="4" color="#0000FF">八束家住宅待合</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市持田町3-242-1">愛媛県松山市持田町3-242-1</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuzuka_machiai.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuzuka_machiai.html</a></p></div> </div>`)[0];
+            popup_3a2a699f142b4fa2ba9b1b7830d4c406.setContent(html_19eba92bd4e0401c93c76c19bfab95b5);
+        
+
+        marker_6e40e3486af942d08b16ac8d522ef241.bindPopup(popup_3a2a699f142b4fa2ba9b1b7830d4c406)
+        ;
+
+        
+    
+    
+            var marker_94cecc32c56a4c56b33e412ea34e3aac = L.marker(
+                [33.85117, 132.782282],
+                {}
+            ).addTo(marker_cluster_a96a8a3f2c7e4c0db73cae73977cce8c);
+        
+    
+            var icon_7702f9f4997c42db85af7b3e49f65a68 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree-conifer", "iconColor": "white", "markerColor": "darkgreen", "prefix": "glyphicon"}
+            );
+            marker_94cecc32c56a4c56b33e412ea34e3aac.setIcon(icon_7702f9f4997c42db85af7b3e49f65a68);
+        
+    
+        var popup_47c9cdf149cc494f854a02d2837d1619 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e0bf9ccd7b7441f8bdbfe5f225b6e79f = $(`<div id="html_e0bf9ccd7b7441f8bdbfe5f225b6e79f" style="width: 100.0%; height: 100.0%;"><div id="q"><strong><h3><a href="https://maps.google.co.jp/maps?q=水口酒造店舗兼主屋"><font size="4" color="#0000FF">水口酒造店舗兼主屋</font></a></h3></strong><hr><p>文化財分類: 登録有形文化財</p><p>種類: 建造物</p><p>住所: <a href="https://maps.google.co.jp/maps?q=愛媛県松山市道後喜多町975">愛媛県松山市道後喜多町975</a></p><p>説明ページ: <a href=http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuzuka_machiai.html>http://www.city.matsuyama.ehime.jp/kanko/kankoguide/rekishibunka/bunkazai/kunitouroku/yatsuzuka_machiai.html</a></p></div> </div>`)[0];
+            popup_47c9cdf149cc494f854a02d2837d1619.setContent(html_e0bf9ccd7b7441f8bdbfe5f225b6e79f);
+        
+
+        marker_94cecc32c56a4c56b33e412ea34e3aac.bindPopup(popup_47c9cdf149cc494f854a02d2837d1619)
+        ;
+
+        
+    
+</script>
