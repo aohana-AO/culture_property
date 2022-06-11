@@ -20,42 +20,48 @@
 <body>
 
 
-<nav class="navbar fixed-top navbar-expand-lg navbar navbar-dark "style="background-color: #222222;">
-  <a class="navbar-brand" href="{% url 'index' %}">松山市文化財データ</a>
+
+
+<nav class="navbar fixed-top navbar-expand-lg navbar navbar-dark " style="background-color: #222222;">
+  <a class="navbar-brand" href="{% url 'index' %}">松山市文化財データapp</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-         <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="{% url 'lists' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          文化財リスト一覧
+         <li class="nav-item ">
+        <a class="nav-link " href="{% url 'lists' %}" >
+          文化財データ一覧
+        </a>
+      </li><li class="nav-item ">
+        <a class="nav-link " href="{% url 'NewsView' %}" >
+          文化財ニュース
         </a>
       </li>
          <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="{% url 'index' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          松山市文化財マップ
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          文化財マップ一覧
         </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'index' %}">松山市文化財マップ(全て)</a>
+          <a class="dropdown-item" href="{% url 'KokuhouView' %}">松山市文化財(国宝)</a>
+          <a class="dropdown-item" href="{% url 'TatemonoView' %}">松山市文化財(建造物)</a>
+          <a class="dropdown-item" href="{% url 'NotatemonoView' %}">松山市文化財(その他)</a>
 
-      </li><li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="{% url 'NewsView' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          文化財news
-        </a>
-
+        </div>
       </li>
          <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           サイト情報
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">当サイトについて</a>
+          <a class="dropdown-item" href="{% url 'index' %}">当サイトについて</a>
           <a class="dropdown-item" href="https://forms.gle/EYqmTEpEmUCQZF5q6">問い合わせ</a>
         </div>
       </li>
-
-
     </ul>
+
 
   </div>
 </nav>
@@ -71,7 +77,7 @@
         <div class="bg-white half half-lightblue"></div>
         <div class="text-center position-relative">
             <br><br>
-            <h2 class="h3 dot font-weight-bold pt-3 pb-5 px-0 mb-0">AED News一覧</h2>
+            <h2 class="h3 dot font-weight-bold pt-3 pb-5 px-0 mb-0">文化財 News一覧</h2>
 
             <hr>
         </div>
@@ -82,7 +88,7 @@
 
                 <div class="row pt-5 border-bottom">
                     <div class="col-4 col-sm-3 col-md-2 h5 font-weight-normal">{{ item.sortkey2 }}</div>
-                    <div class="col-4 col-sm-3 col-md-2 h6 text-center"><span class="badge badge-pill badge-danger px-3 py-1">AEDnews</span></div>
+                    <div class="col-4 col-sm-3 col-md-2 h6 text-center"><span class="badge badge-pill badge-success px-3 py-1">文化財news</span></div>
                     <div class="col-md-8 h6"><strong>{{ item.title }}</strong><br><a href="{{ item.link }}">{{ item.link }}</a></div>
                 </div>
 

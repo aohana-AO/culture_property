@@ -128,6 +128,58 @@ var map_ab28c12a41bd43aba60b1f87edd69d00 = L.map(
     }
 );
 
+//search
+
+var searchboxControl=createSearchboxControl();
+var control = new searchboxControl({
+    sidebarTitleText: 'Header Title Hoge',
+    sidebarMenuItems: {
+        Items: [
+            { type: "link", name: "google", href: "http://google.com", icon: "icon-cloudy" },
+            { type: "link", name: "leafletjs", href: "http://leafletjs.com", icon: "icon-local-carwash" },
+            { type: "button", name: "call alert button", onclick: "alert('alert button')", icon: "icon-potrait" },
+            { type: "button", name: "call function button", onclick: "func_btn_click();", icon: "icon-local-dining" }
+        ]
+    }
+});
+var data = [
+    		{% for bunka2 in bunka_list %}
+    		{"loc":[{{ bunka2.緯度 }},{{ bunka2.経度 }}], "title":"{{ bunka2.名称 }}"},
+
+            {% endfor %}
+    	];
+
+// 検索ボタンが押された時のコールバック
+      control._searchfunctionCallBack = function (srhkeywords)
+      {
+          if (!srhkeywords) {
+              alert("検索ワードを入力してください");
+              return;
+          }
+
+          // 表示データのタイトルに検索ワードが含まれているかチェック（前方一致）
+          for(i in data) {
+              if(data[i].title.indexOf(srhkeywords) === 0){
+                  // 地図の座標を移動
+                  map_ab28c12a41bd43aba60b1f87edd69d00.setView(data[i].loc, 15);
+
+                  return;
+              }
+          }
+          alert("検索ワードに該当するデータはありません。");
+          // 表示データのタイトルに検索ワードが含まれているかチェック（前方一致）
+/*
+
+
+          alert("検索ワードに該当するデータはありません。");*/
+
+      }
+
+      map_ab28c12a41bd43aba60b1f87edd69d00.addControl(control);
+
+      function func_btn_click(){
+          alert('function button');
+      }
  // Locate
         var option = {
         position: 'topright',

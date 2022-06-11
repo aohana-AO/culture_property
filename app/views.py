@@ -17,18 +17,21 @@ class IndexView(ListView):
     context_object_name = "bunka_list"
     template_name = 'app/index.html'
 
-class TatemonoView(TemplateView):
+class TatemonoView(ListView):
     model = Bunka
+    context = Bunka.objects.filter(種類='建造物')
     context_object_name = "bunka_list"
     template_name = 'app/cultural_tatemono.html'
 
-class NotatemonoView(TemplateView):
+class NotatemonoView(ListView):
     model = Bunka
+    context= Bunka.objects.filter(種類='その他')
     context_object_name = "bunka_list"
     template_name = 'app/cultural_no_tatemono.html'
 
-class KokuhouView(TemplateView):
+class KokuhouView(ListView):
     model = Bunka
+    context= Bunka.objects.filter(文化財分類='国宝')
     context_object_name = "bunka_list"
     template_name = 'app/cultural_kokuhou.html'
 
@@ -72,7 +75,7 @@ class ListView(ListView):
 
     def detail(request, pk):
         bunka = get_object_or_404(Bunka, pk=pk)
-        
+
         return render(request, 'app/detail.html', {'bunka': bunka},)
 
 
@@ -81,7 +84,7 @@ class NewsView(View):
     def get(self, request, *args, **kwargs):
         # RSSのスクレイピング
 
-        url = 'https://news.google.com/news/rss/search/section/q/AED/AED?ned=jp&amp;hl=ja&amp;gl=JP'
+        url = 'https://news.google.com/news/rss/search/section/q/愛媛県文化財/AED?ned=jp&amp;hl=ja&amp;gl=JP'
 
         d = feedparser.parse(url)
         news = list()
