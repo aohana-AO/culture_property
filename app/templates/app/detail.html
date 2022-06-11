@@ -24,6 +24,9 @@
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
      <link rel="stylesheet"  href="{% static 'css/L.Control.Locate.min.css' %}"/>
     <script type="text/javascript" src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+    <!--検索欄-->
+    <script type="text/javascript" src="{% static 'js/leaflet.customsearchbox.min.js' %}"></script>
+     <link rel="stylesheet"  href="{% static 'css/searchbox.min.css' %}"/>
  <!-- plugin -->
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -124,6 +127,7 @@ var map_ab28c12a41bd43aba60b1f87edd69d00 = L.map(
 
     }
 );
+
  // Locate
         var option = {
         position: 'topright',

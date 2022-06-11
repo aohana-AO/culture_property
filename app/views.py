@@ -1,8 +1,9 @@
 from re import template
 
+from django.db.models import Q
 from django.http import request
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from .models import Bunka
@@ -11,17 +12,24 @@ import json
 import pprint
 from django.views import generic
 
-class IndexView(TemplateView):
-
+class IndexView(ListView):
+    model = Bunka
+    context_object_name = "bunka_list"
     template_name = 'app/index.html'
+
 class TatemonoView(TemplateView):
-
+    model = Bunka
+    context_object_name = "bunka_list"
     template_name = 'app/cultural_tatemono.html'
+
 class NotatemonoView(TemplateView):
-
+    model = Bunka
+    context_object_name = "bunka_list"
     template_name = 'app/cultural_no_tatemono.html'
-class KokuhouView(TemplateView):
 
+class KokuhouView(TemplateView):
+    model = Bunka
+    context_object_name = "bunka_list"
     template_name = 'app/cultural_kokuhou.html'
 
     """
@@ -30,16 +38,24 @@ class ListView(generic.ListView):
     model = Bunka
     template_name = 'app/list.html'
     """
-class ListView:
+class ListView(ListView):
     model=Bunka
-
 
     def lists(request):
         check = request.POST.getlist("office")
         subete = request.POST.get("subete")
         bunnrui = request.POST.getlist("bunnrui")
+        kensakumei = request.POST.get("kensakumei")
+        kensakujuusyo = request.POST.get("kensakujuusyo")
 
-        if len(bunnrui) == 0 and len(check) == 0 or subete == '全て':
+        if kensakumei:
+            bunka_list = Bunka.objects.filter(
+                Q(名称__icontains=kensakumei))
+        elif kensakujuusyo:
+            bunka_list = Bunka.objects.filter(
+                Q(愛媛県松山市住所__icontains=kensakujuusyo)
+            )
+        elif len(bunnrui) == 0 and len(check) == 0 or subete == '全て':
             bunka_list = Bunka.objects.all()
         elif len(check) == 0 and len(bunnrui) != 0:
             bunka_list = Bunka.objects.filter(文化財分類__in=bunnrui)
@@ -56,7 +72,8 @@ class ListView:
 
     def detail(request, pk):
         bunka = get_object_or_404(Bunka, pk=pk)
-        return render(request, 'app/detail.html', {'bunka': bunka})
+        
+        return render(request, 'app/detail.html', {'bunka': bunka},)
 
 
 

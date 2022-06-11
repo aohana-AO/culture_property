@@ -114,6 +114,10 @@
             <div class="container">
             <form class="" action="{% url 'lists' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
+<label style="margin-right : 30px;"><strong>名称キーワード：</strong><input name="kensakumei" value="{{ request.GET.query }}" type="text">
+        <button type="submit">検索する</button></label>
+<label><strong>住所キーワード：</strong><input name="kensakujuusyo" value="{{ request.GET.query }}" type="text">
+        <button type="submit">検索する</button></label><p><small>※キーワード検索は部分一致です。</small></p>
 
 <label><strong>種類：</strong><input type="checkbox" name="office" value="建造物">建造物</label>
 <label><input type="checkbox" name="office" value="その他">その他　</label>

@@ -24,6 +24,9 @@
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
      <link rel="stylesheet"  href="{% static 'css/L.Control.Locate.min.css' %}"/>
     <script type="text/javascript" src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+    <!--検索欄-->
+    <script type="text/javascript" src="{% static 'js/leaflet.customsearchbox.min.js' %}"></script>
+     <link rel="stylesheet"  href="{% static 'css/searchbox.min.css' %}"/>
  <!-- plugin -->
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -123,6 +126,59 @@ var map_8b17e034c8ab4546b8083bf009dee322 = L.map(
 
     }
 );
+
+//search
+
+var searchboxControl=createSearchboxControl();
+var control = new searchboxControl({
+    sidebarTitleText: 'Header Title Hoge',
+    sidebarMenuItems: {
+        Items: [
+            { type: "link", name: "google", href: "http://google.com", icon: "icon-cloudy" },
+            { type: "link", name: "leafletjs", href: "http://leafletjs.com", icon: "icon-local-carwash" },
+            { type: "button", name: "call alert button", onclick: "alert('alert button')", icon: "icon-potrait" },
+            { type: "button", name: "call function button", onclick: "func_btn_click();", icon: "icon-local-dining" }
+        ]
+    }
+});
+var data = [
+    		{% for bunka in bunka_list %}
+    		{"loc":[{{ bunka.緯度 }},{{ bunka.経度 }}], "title":"{{ bunka.名称 }}"},
+
+            {% endfor %}
+    	];
+
+// 検索ボタンが押された時のコールバック
+      control._searchfunctionCallBack = function (srhkeywords)
+      {
+          if (!srhkeywords) {
+              alert("検索ワードを入力してください");
+              return;
+          }
+
+          // 表示データのタイトルに検索ワードが含まれているかチェック（前方一致）
+          for(i in data) {
+              if(data[i].title.indexOf(srhkeywords) === 0){
+                  // 地図の座標を移動
+                  map_8b17e034c8ab4546b8083bf009dee322.setView(data[i].loc, 15);
+
+                  return;
+              }
+          }
+          alert("検索ワードに該当するデータはありません。");
+          // 表示データのタイトルに検索ワードが含まれているかチェック（前方一致）
+/*
+
+
+          alert("検索ワードに該当するデータはありません。");*/
+
+      }
+
+      map_8b17e034c8ab4546b8083bf009dee322.addControl(control);
+
+      function func_btn_click(){
+          alert('function button');
+      }
  // Locate
         var option = {
         position: 'topright',
