@@ -99,46 +99,10 @@
         </div>
     </section>
 
-    <section class="position-relative pt-5" id="sec5">
-        <div class="bg-white half half-lightblue"></div>
-        <div class="text-center position-relative">
-            <h2 class="h3 dot font-weight-bold pt-3 pb-5 px-0 mb-0">外部サイト</h2>
-        </div>
-        <div class="container mb-5">
-            <div class="row">
-                <div class="col-md-6 py-3"> <img src="{% static 'img/スクリーンショット 2022-04-23 112650.png' %}" alt="" class="w-100 rounded"> </div>
-                <div class="col-md-6 py-3">
-                    <h3 class="h4 py-3 text-center font-weight-bold">愛媛県松山市サイト</h3>
-                    <p class="h6 mb-4">	松山市がAEDを設置している施設の施設名・位置情報の一覧のオープンデータ元ページです。</p>
-                    <div class="text-center"> <a class="btn btn-info badge-pill text-center px-4" href="https://www.city.matsuyama.ehime.jp/shisei/opendata/metadata/aeditiran.html">愛媛県松山市オープンデータ</a> </div>
-                </div>
-            </div>
-        </div>
-        <div class="container mb-5">
-            <div class="row">
-                <div class="col-md-6 py-3">
-                    <h3 class="h4 py-3 text-center font-weight-bold">e~よまちなび</h3>
-                    <p class="h6 mb-4">松山市HPのAED設置市有施設等一覧に掲載されているAED設置場所を施設名や住所入力で検索できます。<br>AEDをお探しの場合はこちらもご参考ください。</p>
-                    <div class="text-center"> <a class="btn btn-info badge-pill text-center px-4" href="https://www2.wagmap.jp/matsuyamacity/ThemeSearch?mid=1&mcl=21,21,2121,212100">e~よまちなび</a> </div>
-                </div>
-                <div class="col-md-6 py-3"> <img src="{% static 'img/スクリーンショット 2022-04-23 112324.png' %}" alt="" class="w-100 rounded"> </div>
-            </div>
-        </div>
-        <div class="container mb-5">
-            <div class="row">
-                <div class="col-md-6 py-3"> <img src="{% static 'img/スクリーンショット 2022-04-23 113008.png' %}" alt="" class="w-100 rounded"> </div>
-                <div class="col-md-6 py-3">
-                    <h3 class="h4 py-3 text-center font-weight-bold">日本救急医療財団 全国AEDマップ</h3>
-                    <p class="h6 mb-4">日本救急医療財団全国AEDマップは、投稿型のマップではなく厚生労働省の指示に基づくものであり登録型の唯一のAEDマップになっています。<br>松山市のオープンデータで網羅していない部分もある可能性があるためこちらもご参考ください。</p>
-                    <div class="text-center"> <a class="btn btn-info badge-pill text-center px-4" href="https://www.qqzaidanmap.jp/map/my_map?latitude=33.843259178709026&longitude=132.7690887451172&zoom=15">日本救急医療財団 全国AEDマップ</a> </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
 
-</main>
-<footer class="position-relative pt-5" style="border-color: #fff;">
+
+</main><footer class="position-relative pt-5" style="border-color: #fff;">
     <!-- フッターナビ -->
 
     <div class="bg-dark pb-3 position-relative">
@@ -146,7 +110,7 @@
          <br>
             <div class="row px-md-0">
                 <div class="col-md-6" >
-                    <p class="text-white h5 font-weight-bold">松山市AED設置場所マップ</p><hr>
+                    <p class="text-white h5 font-weight-bold">松山市文化財データapp</p><hr>
                     <a href="https://forms.gle/EYqmTEpEmUCQZF5q6"><div style="color:white"><i class="far fa-envelope mr-2">お問い合わせ</i></div></a>
 
                     <hr>
@@ -154,13 +118,13 @@
                 <div class="col-md-6" >
                    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="http://qqzaidan.jp/aed_settitouroku/"><div style="color:white">日本救急医療財団</div><span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{% url 'index' %}"><div style="color:white">松山市文化財マップ</div><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="https://www.aed-life.com/information/use/"><div style="color:white">AEDの使い方</div></a>
+        <a class="nav-link" href="{% url 'lists' %}"><div style="color:white">文化財リスト</div></a>
       </li> <li class="nav-item active">
-        <a class="nav-link" href="{% url 'NewsView' %}"><div style="color:white">AED News</div></a>
-      </li></li> <li class="nav-item">
+        <a class="nav-link" href="{% url 'NewsView' %}"><div style="color:white">文化財 News</div></a>
+      </li> <li class="nav-item">
         <a class="nav-link" href="#"><div style="color:white">当サイトについて</div></a>
       </li>
 
@@ -174,6 +138,7 @@
 
     </div>
 </footer>
+
 
 
 

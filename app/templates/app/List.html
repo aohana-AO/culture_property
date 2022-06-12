@@ -172,7 +172,7 @@
          <br>
             <div class="row px-md-0">
                 <div class="col-md-6" >
-                    <p class="text-white h5 font-weight-bold">松山市AED設置場所マップ</p><hr>
+                    <p class="text-white h5 font-weight-bold">松山市文化財データapp</p><hr>
                     <a href="https://forms.gle/EYqmTEpEmUCQZF5q6"><div style="color:white"><i class="far fa-envelope mr-2">お問い合わせ</i></div></a>
 
                     <hr>
@@ -180,12 +180,12 @@
                 <div class="col-md-6" >
                    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="http://qqzaidan.jp/aed_settitouroku/"><div style="color:white">日本救急医療財団</div><span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{% url 'index' %}"><div style="color:white">松山市文化財マップ</div><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="https://www.aed-life.com/information/use/"><div style="color:white">AEDの使い方</div></a>
+        <a class="nav-link" href="{% url 'lists' %}"><div style="color:white">文化財リスト</div></a>
       </li> <li class="nav-item active">
-        <a class="nav-link" href="{% url 'NewsView' %}"><div style="color:white">AED News</div></a>
+        <a class="nav-link" href="{% url 'NewsView' %}"><div style="color:white">文化財 News</div></a>
       </li> <li class="nav-item">
         <a class="nav-link" href="#"><div style="color:white">当サイトについて</div></a>
       </li>
