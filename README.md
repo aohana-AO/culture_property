@@ -28,7 +28,10 @@
 - ※キーワード検索では__icontains使用のため完全一致ではなく部分一致検索になる
 
 
-https://user-images.githubusercontent.com/84378453/173186322-cc9349f9-f8e9-48b1-91d2-e5a2d7a2d745.mp4
+
+
+
+https://user-images.githubusercontent.com/84378453/173225493-2380213b-0bf7-4e9e-8568-1fdbed76db8a.mp4
 
 
 
