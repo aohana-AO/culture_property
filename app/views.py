@@ -70,7 +70,7 @@ class ListView(ListView):
             print(check)
         else:
             bunka_list = Bunka.objects.filter(種類__in=check,文化財分類__in=bunnrui)
-        return render(request, 'app/list.html', {'bunka_list': bunka_list})
+        return render(request, 'app/List.html', {'bunka_list': bunka_list})
 
 
     def detail(request, pk):
