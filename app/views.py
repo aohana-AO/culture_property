@@ -31,7 +31,7 @@ class NotatemonoView(ListView):
 
 class KokuhouView(ListView):
     model = Bunka
-    context= Bunka.objects.filter(文化財分類='国宝')
+    context = Bunka.objects.filter(文化財分類='国宝')
     context_object_name = "bunka_list"
     template_name = 'app/cultural_kokuhou.html'
 
