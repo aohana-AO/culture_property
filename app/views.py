@@ -39,7 +39,7 @@ class KokuhouView(ListView):
 class ListView(generic.ListView):
     Bunkaテーブルの一覧表作成
     model = Bunka
-    template_name = 'app/list.html'
+    template_name = 'app/List.html'
     """
 class ListView(ListView):
     model=Bunka
