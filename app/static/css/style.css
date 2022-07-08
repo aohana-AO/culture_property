@@ -11,11 +11,11 @@ body, p { line-height: 1.8rem !important; }
 /* 半円背景各種
 -------------------------------------------------- */
 /* 半月（背景白） */
-.half-white:after { background-color: #ff4e33; }
+.half-white:after { background-color: #6dff33; }
 /* 半月（背景薄青） */
-.half-lightblue:after { background: #ff4e33; }
+.half-lightblue:after { background: #6dff33; }
 /* 半月（背景緑） */
-.half-info:after { background: #ff4e33; }
+.half-info:after { background: #6dff33; }
 /* 共通 */
 .half {
     width: 120%;
@@ -46,7 +46,7 @@ body, p { line-height: 1.8rem !important; }
 	font-family: "Font Awesome 5 Free";/*忘れずに*/
 	content: "\f111";/*アイコンのユニコード*/
 	font-size: 1.2rem;/*サイズ*/
-	color: #ff4e33;
+	color: #6dff33;
 	padding: 0 10px;
 	vertical-align: middle;
 }
@@ -67,7 +67,7 @@ header .container-fluid {
 }
 .breadcrumb-item + .breadcrumb-item::before {
 	content: '>';
-	color: #ff4e33;
+	color: #6dff33;
 }
 /* --------------------------------------------------
     トップページ

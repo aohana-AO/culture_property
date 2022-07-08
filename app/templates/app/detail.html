@@ -1,8 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <head>    
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="format-detection" content="email=no,telephone=no,address=no">
+        <title>松山市文化財app</title>
+        <meta name="description" content="松山市の文化財オープンデータを使用し、leaflrt,foliumでmap化したサイトです。">
+
+        <meta name="robots" content="index,follow">
         <script>
             L_NO_TOUCH = false;
             L_DISABLE_3D = false;
@@ -26,7 +32,7 @@
     <script type="text/javascript" src="{% static 'js/L.Control.Locate.min.js' %}"></script>
     <!--検索欄-->
     <script type="text/javascript" src="{% static 'js/leaflet.customsearchbox.min.js' %}"></script>
-     <link rel="stylesheet"  href="{% static 'css/searchbox.min.css' %}"/>
+     <link rel="stylesheet"  href="{% static 'css/searchbox.min .css' %}"/>
  <!-- plugin -->
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -78,7 +84,7 @@
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">サイト情報 <span class="caret"></span></a>
 <ul class="dropdown-menu">
-<li><a href="#">当サイトについて</a></li>
+<li><a href="{% url 'site' %}">当サイトについて</a></li>
 <li><a href="https://forms.gle/EYqmTEpEmUCQZF5q6">問い合わせ</a></li>
 </ul>
 </li>
@@ -129,7 +135,7 @@ var map_ab28c12a41bd43aba60b1f87edd69d00 = L.map(
 );
 
 //search
-/*
+
 var searchboxControl=createSearchboxControl();
 var control = new searchboxControl({
     sidebarTitleText: 'Header Title Hoge',
@@ -195,7 +201,7 @@ var data = [
 
         var lc = L.control.locate(option).addTo(map_ab28c12a41bd43aba60b1f87edd69d00);
         //lc.start();
-        */
+
  //ここからマップいじり
 
         var Basic_Map = new Array();

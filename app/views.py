@@ -17,6 +17,10 @@ class IndexView(ListView):
     context_object_name = "bunka_list"
     template_name = 'app/index.html'
 
+
+class SiteView(TemplateView):
+    template_name = 'app/site.html'
+
 class TatemonoView(ListView):
     model = Bunka
     context = Bunka.objects.filter(種類='建造物')
